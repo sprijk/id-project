@@ -45,7 +45,7 @@ gulp.task 'clean', ->
 		.pipe clean force: true
 
 gulp.task 'copy', ->
-	gulp.src [ "#{config.directories.source}/**/*", "!**/*.coffee", "!**/*.litcoffee", "!**/*.jade", "!**/*.less" ]
+	gulp.src [ "#{config.directories.source}/**/*", "!**/*.coffee", "!**/*.litcoffee", "!**/*.less" ]
 		.pipe gulp.dest "#{config.directories.build}"
 
 gulp.task 'compile:coffee', ->
@@ -60,7 +60,7 @@ gulp.task 'compile:less', ->
 		.pipe less()
 		.pipe gulp.dest "#{config.directories.build}/#{config.directories.client}/css"
 
-gulp.task 'compile:templates', ['copy'], (cb) ->
+gulp.task 'compile:templates', (cb) ->
 	from = "#{config.directories.source}/#{config.directories.client}/templates"
 	to   = "#{config.directories.build}/#{config.directories.client}/js/templates.js"
 
@@ -81,7 +81,7 @@ gulp.task 'test', ['compile', 'copy'], (cb) ->
 	runTests true, 'spec', cb
 	return
 
-gulp.task 'watch', ->
+gulp.task 'watch', ['compile', 'copy'], ->
 	compileCoffee = (src) ->
 		destination = gulp.dest "#{config.directories.build}"
 
