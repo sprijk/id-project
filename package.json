@@ -6,6 +6,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+  },
+  "devDependencies": {
     "async": "*",
     "coffee-script": "*",
     "gulp": "*",
