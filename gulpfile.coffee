@@ -1,12 +1,13 @@
-clean      = require 'gulp-clean'
-coffee     = require 'gulp-coffee'
-gulp       = require 'gulp'
-ignore     = require 'gulp-ignore'
-jade       = require 'gulp-jade'
-less       = require 'gulp-less'
-mocha      = require 'gulp-spawn-mocha'
-nodemon    = require 'gulp-nodemon'
-watch      = require 'gulp-watch'
+clean       = require 'gulp-clean'
+coffee      = require 'gulp-coffee'
+gulp        = require 'gulp'
+ignore      = require 'gulp-ignore'
+jade        = require 'gulp-jade'
+less        = require 'gulp-less'
+mocha       = require 'gulp-spawn-mocha'
+nodemon     = require 'gulp-nodemon'
+templatizer = require 'templatizer'
+watch       = require 'gulp-watch'
 
 log = console.log.bind console
 
@@ -41,7 +42,7 @@ runTests = (exit, reporter, cb) ->
 
 gulp.task 'clean', ->
 	gulp.src "#{config.directories.build}/*", read: false
-	.pipe clean force: true
+		.pipe clean force: true
 
 gulp.task 'copy', ->
 	gulp.src [ "#{config.directories.source}/**/*", "!**/*.coffee", "!**/*.litcoffee", "!**/*.jade", "!**/*.less" ]
@@ -59,10 +60,16 @@ gulp.task 'compile:less', ->
 		.pipe less()
 		.pipe gulp.dest "#{config.directories.build}/#{config.directories.client}/css"
 
-gulp.task 'compile:templates', (cb) ->
-	gulp.src "#{config.directories.source}/**/*.jade"
-		.pipe jade client: true
-		.pipe gulp.dest "#{config.directories.build}"
+gulp.task 'compile:templates', ['copy'], (cb) ->
+	from = "#{config.directories.source}/#{config.directories.client}/templates"
+	to   = "#{config.directories.build}/#{config.directories.client}/js/templates.js"
+
+	try
+		templatizer from, to
+	catch error
+		log 'No templates'
+
+	cb()
 
 gulp.task 'compile', [
 	'compile:coffee'
@@ -107,9 +114,13 @@ gulp.task 'watch', ->
 		name: 'watch.jade'
 		glob: "#{config.directories.source}/**/*.jade"
 	}, (files) ->
-		files
-			.pipe jade client: true
-			.pipe gulp.dest "#{config.directories.build}"
+		from = "#{config.directories.source}/#{config.directories.client}/templates"
+		to   = "#{config.directories.build}/#{config.directories.client}/js/templates.js"
+
+		try
+			templatizer from, to
+		catch error
+			log 'No templates'
 
 	watch {
 		name: 'watch.copy'
