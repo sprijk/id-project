@@ -1,0 +1,22 @@
+{
+  "name": "leveldb",
+  "version": "0.0.0",
+  "description": "Tests with leveldb",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async": "*",
+    "coffee-script": "*",
+    "gulp": "*",
+    "gulp-clean": "*",
+    "gulp-coffee": "*",
+    "gulp-ignore": "*",
+    "gulp-jade": "*",
+    "gulp-less": "*",
+    "gulp-nodemon": "*",
+    "gulp-spawn-mocha": "*",
+    "gulp-watch": "*",
+    "underscore": "*"
+  }
+}
