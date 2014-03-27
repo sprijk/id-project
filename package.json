@@ -17,6 +17,7 @@
     "gulp-nodemon": "*",
     "gulp-spawn-mocha": "*",
     "gulp-watch": "*",
+    "templatizer": "*",
     "underscore": "*"
   }
 }
