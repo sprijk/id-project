@@ -21,5 +21,8 @@
     "gulp-watch": "*",
     "templatizer": "*",
     "underscore": "*"
+  },
+  "scripts": {
+    "postinstall": "gulp --require coffee-script/register"
   }
 }
