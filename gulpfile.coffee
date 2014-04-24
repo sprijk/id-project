@@ -8,6 +8,7 @@ mocha       = require 'gulp-spawn-mocha'
 nodemon     = require 'gulp-nodemon'
 templatizer = require 'templatizer'
 watch       = require 'gulp-watch'
+path        = require 'path'
 
 log = console.log.bind console
 
@@ -21,6 +22,20 @@ config =
 		server:        'server'
 		test:          'test'
 		documentation: 'doc'
+
+compileCoffee = (source, destination) ->
+	coffeeCompiler = coffee bare: true
+
+	coffeeCompiler.on 'error', (error) ->
+		console.log error.stack
+
+	source
+		.pipe coffeeCompiler
+		.pipe destination
+
+compileTemplates = (source, destination) ->
+	try
+		templatizer source, destination
 
 runTests = (exit, reporter, cb) ->
 	mochaInstance = mocha
@@ -44,30 +59,27 @@ gulp.task 'clean', ->
 	gulp.src "#{config.directories.build}/*", read: false
 		.pipe clean force: true
 
-gulp.task 'copy', ->
+gulp.task 'copy', ['clean'], ->
 	gulp.src [ "#{config.directories.source}/**/*", "!**/*.coffee", "!**/*.litcoffee", "!**/*.less" ]
 		.pipe gulp.dest "#{config.directories.build}"
 
-gulp.task 'compile:coffee', ->
+gulp.task 'compile:coffee', ['clean'], ->
 	source = gulp.src [ "#{config.directories.source}/**/*.coffee", "#{config.directories.source}/**/*.litcoffee" ]
 
 	source
 		.pipe coffee bare: true
 		.pipe gulp.dest "#{config.directories.build}"
 
-gulp.task 'compile:less', ->
+gulp.task 'compile:less', ['clean'], ->
 	gulp.src "#{config.directories.source}/#{config.directories.client}/less/app.less"
 		.pipe less()
 		.pipe gulp.dest "#{config.directories.build}/#{config.directories.client}/css"
 
-gulp.task 'compile:templates', (cb) ->
-	from = "#{config.directories.source}/#{config.directories.client}/templates"
-	to   = "#{config.directories.build}/#{config.directories.client}/js/templates.js"
+gulp.task 'compile:templates', ['clean'], (cb) ->
+	source      = path.resolve __dirname, "#{config.directories.source}/#{config.directories.client}/templates"
+	destination = path.resolve __dirname, "#{config.directories.build}/#{config.directories.client}/js/templates.js"
 
-	try
-		templatizer from, to
-	catch error
-		log 'No templates'
+	compileTemplates source, destination
 
 	cb()
 
@@ -82,25 +94,17 @@ gulp.task 'test', ['compile', 'copy'], (cb) ->
 	return
 
 gulp.task 'watch', ['compile', 'copy'], ->
-	compileCoffee = (src) ->
-		destination = gulp.dest "#{config.directories.build}"
-
-		destination.on 'end', ->
-			runTests false, 'min', ->
-
-		src
-			.pipe coffee bare: true
-			.pipe destination
-
 	watch {
 		name: 'watch.coffee'
 		glob: "#{config.directories.source}/**/*.coffee"
-	}, compileCoffee
+	}, (source) ->
+		compileCoffee source, gulp.dest "#{config.directories.build}"
 
 	watch {
 		name: 'watch.litcoffee'
 		glob: "#{config.directories.source}/**/*.litcoffee"
-	}, compileCoffee
+	}, (source) ->
+		compileCoffee source, gulp.dest "#{config.directories.build}"
 
 	watch {
 		name: 'watch.less'
@@ -114,13 +118,10 @@ gulp.task 'watch', ['compile', 'copy'], ->
 		name: 'watch.jade'
 		glob: "#{config.directories.source}/**/*.jade"
 	}, (files) ->
-		from = "#{config.directories.source}/#{config.directories.client}/templates"
-		to   = "#{config.directories.build}/#{config.directories.client}/js/templates.js"
+		source      = path.resolve __dirname, "#{config.directories.source}/#{config.directories.client}/templates"
+		destination = path.resolve __dirname, "#{config.directories.build}/#{config.directories.client}/js/templates.js"
 
-		try
-			templatizer from, to
-		catch error
-			log 'No templates'
+		compileTemplates source, destination
 
 	watch {
 		name: 'watch.copy'
@@ -133,12 +134,14 @@ gulp.task 'watch', ['compile', 'copy'], ->
 			.pipe ignore.exclude '**/*.jade'
 			.pipe gulp.dest "#{config.directories.build}"
 
-	monitor = nodemon
-		script: 'app.js'
-		watch:  [ "#{config.directories.build}" ]
-		ext:    'js css html'
+	setTimeout (->
+		monitor = nodemon
+			script: 'app.js'
+			watch:  [ "#{config.directories.build}" ]
+			ext:    'js css html'
+			verbose: true
+	), 10
 
 gulp.task 'default', [
-	'compile'
-	'copy'
+	'watch'
 ]
