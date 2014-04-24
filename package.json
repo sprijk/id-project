@@ -1,7 +1,7 @@
 {
-  "name": "leveldb",
+  "name": "gulpfile",
   "version": "0.0.0",
-  "description": "Tests with leveldb",
+  "description": "Gulpfile",
   "main": "index.js",
   "author": "",
   "license": "ISC",
