@@ -134,14 +134,17 @@ gulp.task 'watch', ['compile', 'copy'], ->
 			.pipe ignore.exclude '**/*.jade'
 			.pipe gulp.dest "#{config.directories.build}"
 
+	# Do this in a setTimeout to not trigger restarts while the watch compile
+	# targets are still running.
 	setTimeout (->
+		# To put debugging on add the option verbose: true
 		monitor = nodemon
 			script: 'app.js'
 			watch:  [ "#{config.directories.build}" ]
 			ext:    'js css html'
-			verbose: true
 	), 10
 
 gulp.task 'default', [
-	'watch'
+	'compile'
+	'test'
 ]
