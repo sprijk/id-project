@@ -36,6 +36,8 @@ compileCoffee = (source, destination) ->
 compileTemplates = (source, destination) ->
 	try
 		templatizer source, destination
+	catch error
+		console.log error.stack or error.message or error
 
 runTests = (exit, reporter, cb) ->
 	mochaInstance = mocha
