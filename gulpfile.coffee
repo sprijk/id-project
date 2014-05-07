@@ -262,6 +262,6 @@ gulp.task 'watch', ['compile', 'copy'], ->
 	), 10
 
 gulp.task 'default', [
+	'clean'
 	'compile'
-	'test'
 ]
