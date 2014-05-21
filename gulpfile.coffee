@@ -19,9 +19,9 @@ log = console.log.bind console
 
 config =
 	directories:
-		source: './src'
-		build:  './build'
-		test:   './src/test'
+		source: 'src'
+		build:  'build'
+		test:   'src/test'
 
 		bin:           'bin'
 		lib:           'lib'
