@@ -219,7 +219,7 @@ gulp.task 'compile', [
 gulp.task 'test', ['compile', 'copy'], (cb) ->
 	watchTest()
 
-gulp.task 'watch', ->
+gulp.task 'watch', ['compile', 'copy'], ->
 	watchFiles()
 	watchBrowserify()
 	watchNodemon()
