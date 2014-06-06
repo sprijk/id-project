@@ -1,19 +1,20 @@
-clean         = require 'gulp-clean'
-coffee        = require 'gulp-coffee'
-cp            = require 'child_process'
-filter        = require 'gulp-filter'
-gulp          = require 'gulp'
-header        = require 'gulp-header'
-ignore        = require 'gulp-ignore'
-jade          = require 'gulp-jade'
-less          = require 'gulp-less'
-nodemon       = require 'gulp-nodemon'
-path          = require 'path'
-rename        = require 'gulp-rename'
-size          = require 'gulp-size'
-templatizer   = require 'templatizer'
-watch         = require 'gulp-watch'
-{ Transform } = require 'stream'
+browserify = require 'browserify'
+cp         = require 'child_process'
+es         = require 'event-stream'
+livereload = require 'tiny-lr'
+path       = require 'path'
+source     = require 'vinyl-source-stream'
+watchify   = require 'watchify'
+
+gulp           = require 'gulp'
+gulpClean      = require 'gulp-clean'
+gulpCoffee     = require 'gulp-coffee'
+gulpFilter     = require 'gulp-filter'
+gulpHeader     = require 'gulp-header'
+gulpLess       = require 'gulp-less'
+gulpLivereload = require 'gulp-livereload'
+gulpNodemon    = require 'gulp-nodemon'
+gulpWatch      = require 'gulp-watch'
 
 log = console.log.bind console
 
@@ -32,137 +33,58 @@ config =
 	test:
 		reporter: 'spec'
 
-# Filters out coffee files and compiles them.
-# When the file is from the bin directory, add a header.
-compileCoffee = (source, destination) ->
-	log 'Compiling CoffeeScript.'
+liveReloadServer = livereload()
+liveReloadServer.listen 35729, (error) ->
+	console.log error if error
 
-	coffeeFileFilter = filter [ "**/*.coffee", "**/*.litcoffee" ]
-	binaryFileFilter = filter "#{config.directories.bin}/**/*"
+coffeeCompiler = ->
+	filter   = gulpFilter [ "**/*.coffee", "**/*.litcoffee" ]
+	compiler = gulpCoffee bare: true
 
-	coffeeCompiler = coffee bare: true
-
-	coffeeCompiler.on 'error', (error) ->
+	compiler.on 'error', (error) ->
 		console.log error.stack
 
+	es.pipeline filter, compiler
+
+executablePrepender = ->
+	filter  = gulpFilter "#{config.directories.bin}/**/*"
+	header  = gulpHeader '#!/usr/bin/env node\n'
+	restore = filter.restore()
+
+	es.pipeline filter, header, restore
+
+compileCoffee = (source, destination) ->
 	source
-		.pipe coffeeFileFilter
-		.pipe coffeeCompiler
-
-		.pipe binaryFileFilter
-		.pipe header '#!/usr/bin/env node\n'
-		.pipe binaryFileFilter.restore()
-
+		.pipe coffeeCompiler()
+		.pipe executablePrepender()
 		.pipe destination
 
 # Filters out less files and sends them to the templateCompiler.
-compileLess = (source, destination) ->
-	compile = ->
-		log 'Compiling Less.'
+compileLess = (input) ->
+	lessFilter          = gulpFilter "**/*.less"
+	cssFilter           = gulpFilter "**/*.css"
+	sourceFilePath      = gulp.src "#{config.directories.source}/#{config.directories.client}/less/app.less"
+	targetFileDirectory = gulp.dest "#{config.directories.build}/#{config.directories.client}/css"
 
-		source      = gulp.src "#{config.directories.source}/#{config.directories.client}/less/app.less"
-		destination = gulp.dest "#{config.directories.build}/#{config.directories.client}/css"
-		source
-			.pipe less()
-			.pipe destination
+	input
+		.pipe lessFilter
 
-	# If there is no source, compile everything.
-	# Sends one message to the lessCompiler, just compiling everything.
-	unless source
-		compile()
+	lessFilter.on 'data', ->
+		sourceFilePath
+			.pipe gulpLess()
+			.pipe targetFileDirectory
+			.pipe gulpLivereload liveReloadServer
 
-	# If there is source, compile the filtered less files.
-	else
-		compiled = false
+copyFiles = (sourceStream, destinationStream) ->
+	plainFileFilter = gulpFilter [
+		"!**/*.coffee"
+		"!**/*.litcoffee"
+		"!**/*.less"
+	]
 
-		lessFileFilter = filter [ "**/*.less" ]
-
-		source
-			.pipe lessFileFilter
-
-			# Filter already filters for less files so we don't have to match in the
-			# rename.
-			# Rename provides a callback so we can compile everything.
-			.pipe rename (path) ->
-				unless compiled
-					compile()
-
-					compiled = true
-
-				path
-
-# Filters out jade files and sends them to the templateCompiler.
-compileJade = (source, destination) ->
-	compile = ->
-		log 'Compiling Jade.'
-
-		source      = path.resolve __dirname, "#{config.directories.source}/#{config.directories.client}/templates"
-		destination = path.resolve __dirname, "#{config.directories.build}/#{config.directories.client}/js/templates.js"
-		try
-			templatizer source, destination
-		catch error
-			console.log error.stack or error.message or error
-
-	# If there is no source, compile everything.
-	# Sends one message to the jadeCompiler, just compiling everything.
-	unless source
-		compile()
-
-	# If there is source, compile the filtered jade files.
-	else
-		compiled = false
-
-		jadeFileFilter = filter [ "**/*.jade" ]
-
-		source
-			.pipe jadeFileFilter
-
-			# Filter already filters for jade files so we don't have to match in the
-			# rename.
-			# Rename provides a callback so we can compile everything.
-			.pipe rename (path) ->
-				unless compiled
-					compile()
-
-					compiled = true
-
-				path
-
-copyFiles = (source, destination) ->
-	log 'Copying Files.'
-
-	# If there is no source, compile everything.
-	# Sends one message to the jadeCompiler, just compiling everything.
-	unless source
-		source = gulp.src [
-			"#{config.directories.source}/**/*"
-			"!**/*.coffee"
-			"!**/*.litcoffee"
-			"!**/*.less"
-
-			# Copy server jade, but don't copy client jade
-			"!#{config.directories.client}/**/*.jade"
-		]
-
-		destination = gulp.dest "#{config.directories.build}"
-
-		source
-			.pipe destination
-
-	# If there is source, compile the filtered jade files.
-	else
-		plainFileFilter = filter [
-			"**/*.coffee"
-			"**/*.litcoffee"
-			"**/*.less"
-
-			# Copy server jade, but don't copy client jade
-			"#{config.directories.client}/**/*.jade"
-		]
-
-		source
-			.pipe plainFileFilter
-			.pipe destination
+	sourceStream
+		.pipe plainFileFilter
+		.pipe destinationStream
 
 runTests = (exit, reporter, cb) ->
 	mochaInstance = cp.spawn 'mocha', [
@@ -187,37 +109,40 @@ runTests = (exit, reporter, cb) ->
 		else
 			cb?()
 
-# Cleans all JavaScript and CSS files. Leaves all other files.
-gulp.task 'clean', ->
-	gulp.src ["#{config.directories.build}/**/*.js", "#{config.directories.build}/**/*.css"], read: false
-		.pipe clean force: true
+watchBrowserify = ->
+	sourceFilePath      = "#{__dirname}/#{config.directories.build}/#{config.directories.client}/js/app.js"
+	targetFileDirectory = "#{__dirname}/#{config.directories.build}/#{config.directories.client}/js"
 
-gulp.task 'copy', ['clean'], (cb) ->
-	copyFiles()
-	cb()
+	bundler = watchify sourceFilePath
 
-gulp.task 'compile:coffee', ['clean'], ->
-	source      = gulp.src [ "#{config.directories.source}/**/*.coffee", "#{config.directories.source}/**/*.litcoffee" ]
-	destination = gulp.dest "#{config.directories.build}"
+	bundler.transform 'jadeify'
 
-	compileCoffee source, destination
+	compile = ->
+		bundler.bundle debug: true
+			.pipe source 'app.bundle.js'
+			.pipe gulp.dest targetFileDirectory
+			.pipe gulpLivereload liveReloadServer
 
-gulp.task 'compile:less', ['clean'], (cb) ->
-	compileLess()
-	cb()
+	bundler.on 'update', compile
 
-gulp.task 'compile:templates', ['clean'], (cb) ->
-	compileJade()
-	cb()
+	compile()
 
-gulp.task 'compile', [
-	'compile:coffee'
-	'compile:less'
-	'compile:templates'
-]
+watchFiles = ->
+	gulpWatch {
+		name: 'watch'
+		glob: [
+			"#{config.directories.source}/**/*"
+		]
+		emitOnGlob: false
+	}, (sourceStream) ->
+		destinationStream = gulp.dest "#{config.directories.build}"
 
-gulp.task 'test', ['compile', 'copy'], (cb) ->
-	watch {
+		compileCoffee sourceStream, destinationStream
+		compileLess   sourceStream, destinationStream
+		copyFiles     sourceStream, destinationStream
+
+watchTest = ->
+	gulpWatch {
 		name: 'watch'
 		glob: [
 			"#{config.directories.source}/**/*.coffee"
@@ -226,40 +151,78 @@ gulp.task 'test', ['compile', 'copy'], (cb) ->
 			"#{config.directories.test}/**/*.litcoffee"
 		]
 		emitOnGlob: true
-	}, (source) ->
-		destination = gulp.dest "#{config.directories.build}"
+	}, (sourceStream) ->
+		destinationStream = gulp.dest "#{config.directories.build}"
 
-		compileCoffee source, destination
+		destinationStream.on 'end', runTests.bind false, config.test.reporter
 
-		# TODO: add an optional callback to compileCoffee, so we can do this
-		# exactly after that.
-		setTimeout (->
-			runTests false, config.test.reporter
-		), 1000
+		compileCoffee sourceStream, destinationStream
 
-gulp.task 'watch', ['compile', 'copy'], ->
-	watch {
-		name:       'watch'
-		glob:       [ "#{config.directories.source}/**/*" ]
-		emitOnGlob: false
-	}, (source) ->
-		destination = gulp.dest "#{config.directories.build}"
+watchNodemon = ->
+	monitor = gulpNodemon
+		#verbose: true
+		script: 'app.js'
+		watch:  [
+			#"#{config.directories.build}/#{config.directories.client}/css/app.css"
+			#"#{config.directories.build}/#{config.directories.client}/js/app.bundle.js"
+			"#{config.directories.build}/#{config.directories.server}/**/*.js"
+		]
 
-		# These happen in parallel.
-		compileCoffee source, destination
-		compileLess   source, destination
-		compileJade   source, destination
-		copyFiles     source, destination
 
-	# Do this in a setTimeout to not trigger restarts while the watch compile
-	# targets are still running.
-	setTimeout (->
-		# To put debugging on add the option verbose: true
-		monitor = nodemon
-			script: 'app.js'
-			watch:  [ "#{config.directories.build}" ]
-			ext:    'js css html'
-	), 10
+gulp.task 'clean', ->
+	gulp.src ["#{config.directories.build}/**/*.js", "#{config.directories.build}/**/*.css"], read: false
+		.pipe gulpClean force: true
+
+gulp.task 'copy', ['clean'], ->
+	sourceStream = gulp.src [
+		"#{config.directories.source}/**/*"
+		"!**/*.coffee"
+		"!**/*.litcoffee"
+		"!**/*.less"
+	]
+
+	destinationStream = gulp.dest "#{config.directories.build}"
+
+	sourceStream
+		.pipe destinationStream
+		.pipe gulpLivereload liveReloadServer
+
+gulp.task 'compile:coffee', ['clean'], ->
+	sourceStream      = gulp.src [ "#{config.directories.source}/**/*.coffee", "#{config.directories.source}/**/*.litcoffee" ]
+	destinationStream = gulp.dest "#{config.directories.build}"
+
+	compileCoffee sourceStream, destinationStream
+
+gulp.task 'compile:less', ['clean'], (cb) ->
+	compileLess()
+	cb()
+
+gulp.task 'compile:browserify', ['copy', 'compile:coffee'], ->
+	sourceFilePath      = "#{__dirname}/#{config.directories.build}/#{config.directories.client}/js/app.js"
+	targetFileDirectory = "#{__dirname}/#{config.directories.build}/#{config.directories.client}/js"
+
+	bundler = browserify()
+	bundler.add sourceFilePath
+
+	bundler.transform 'jadeify'
+
+	bundler.bundle debug: true
+		.pipe source 'app.bundle.js'
+		.pipe gulp.dest targetFileDirectory
+
+gulp.task 'compile', [
+	'compile:browserify'
+	'compile:coffee'
+	'compile:less'
+]
+
+gulp.task 'test', ['compile', 'copy'], (cb) ->
+	watchTest()
+
+gulp.task 'watch', ->
+	watchFiles()
+	watchBrowserify()
+	watchNodemon()
 
 gulp.task 'default', [
 	'clean'

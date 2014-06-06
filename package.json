@@ -7,24 +7,18 @@
   "license": "ISC",
   "dependencies": {},
   "devDependencies": {
-    "async": "*",
-    "coffee-script": "*",
-    "gulp": "*",
-    "gulp-clean": "*",
-    "gulp-coffee": "*",
-    "gulp-filter": "*",
-    "gulp-header": "*",
-    "gulp-ignore": "*",
-    "gulp-jade": "*",
-    "gulp-less": "*",
-    "gulp-nodemon": "*",
-    "gulp-rename": "*",
-    "gulp-size": "*",
-    "gulp-watch": "*",
-    "templatizer": "*",
-    "underscore": "*"
-  },
-  "scripts": {
-    "postinstall": "gulp --require coffee-script/register"
+    "browserify": "^4.1.8",
+    "event-stream": "^3.1.5",
+    "gulp": "^3.7.0",
+    "gulp-clean": "^0.3.0",
+    "gulp-coffee": "^2.0.0",
+    "gulp-filter": "^0.4.1",
+    "gulp-header": "^1.0.2",
+    "gulp-less": "^1.2.3",
+    "gulp-livereload": "^2.0.0",
+    "gulp-nodemon": "^1.0.4",
+    "gulp-watch": "^0.6.5",
+    "tiny-lr": "0.0.7",
+    "vinyl-source-stream": "^0.1.1"
   }
 }
