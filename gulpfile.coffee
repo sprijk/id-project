@@ -66,14 +66,20 @@ compileLess = (input) ->
 	sourceFilePath      = gulp.src "#{config.directories.source}/#{config.directories.client}/less/app.less"
 	targetFileDirectory = gulp.dest "#{config.directories.build}/#{config.directories.client}/css"
 
-	input
-		.pipe lessFilter
-
-	lessFilter.on 'data', ->
+	compile = ->
 		sourceFilePath
 			.pipe gulpLess()
 			.pipe targetFileDirectory
 			.pipe gulpLivereload liveReloadServer
+
+	if input
+		lessFilter.on 'data', compile
+
+		input
+			.pipe lessFilter
+
+	else
+		compile()
 
 copyFiles = (sourceStream, destinationStream) ->
 	plainFileFilter = gulpFilter [
