@@ -174,10 +174,10 @@ watchNodemon = ->
 			"#{config.directories.build}/#{config.directories.server}/**/*.js"
 		]
 
-
-gulp.task 'clean', ->
-	gulp.src ["#{config.directories.build}/**/*.js", "#{config.directories.build}/**/*.css"], read: false
-		.pipe gulpClean force: true
+gulp.task 'clean', (cb) ->
+	rimraf 'build', (error) ->
+		return cb error if error
+		fs.mkdir 'build', cb
 
 gulp.task 'copy', ['clean'], ->
 	sourceStream = gulp.src [
