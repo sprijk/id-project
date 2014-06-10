@@ -1,6 +1,6 @@
 {
   "name": "gulpfile",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Gulpfile",
   "main": "index.js",
   "author": "",
