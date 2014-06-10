@@ -1,11 +1,7 @@
-browserify = require 'browserify'
-cp         = require 'child_process'
-es         = require 'event-stream'
-livereload = require 'tiny-lr'
-path       = require 'path'
-source     = require 'vinyl-source-stream'
-watchify   = require 'watchify'
-
+browserify     = require 'browserify'
+cp             = require 'child_process'
+es             = require 'event-stream'
+fs             = require 'fs'
 gulp           = require 'gulp'
 gulpClean      = require 'gulp-clean'
 gulpCoffee     = require 'gulp-coffee'
@@ -15,8 +11,11 @@ gulpLess       = require 'gulp-less'
 gulpLivereload = require 'gulp-livereload'
 gulpNodemon    = require 'gulp-nodemon'
 gulpWatch      = require 'gulp-watch'
-
-log = console.log.bind console
+livereload     = require 'tiny-lr'
+path           = require 'path'
+rimraf         = require 'rimraf'
+source         = require 'vinyl-source-stream'
+watchify       = require 'watchify'
 
 config =
 	directories:
