@@ -124,6 +124,9 @@ watchBrowserify = ->
 
 	bundler.on 'update', compile
 
+	bundler.on 'error', (error) ->
+		console.error error
+
 	compile()
 
 watchFiles = ->
@@ -200,18 +203,26 @@ gulp.task 'compile:coffee', ['clean'], ->
 gulp.task 'compile:less', ['clean'], (cb) ->
 	compileLess cb
 
-gulp.task 'compile:browserify', ['copy', 'compile:coffee'], ->
+gulp.task 'compile:browserify', ['copy', 'compile:coffee'], (cb) ->
 	sourceFilePath      = "#{__dirname}/#{config.directories.build}/#{config.directories.client}/js/app.js"
-	targetFileDirectory = "#{__dirname}/#{config.directories.build}/#{config.directories.client}/js"
+	targetFileDirectory = gulp.dest "#{__dirname}/#{config.directories.build}/#{config.directories.client}/js"
+
+	targetFileDirectory.once 'end', ->
+		console.log 'end'
+		cb()
 
 	bundler = browserify()
 	bundler.add sourceFilePath
 
 	bundler.transform 'jadeify'
 
+	bundler.on 'error', (error) ->
+		console.error error
+		cb()
+
 	bundler.bundle debug: true
 		.pipe source 'app.bundle.js'
-		.pipe gulp.dest targetFileDirectory
+		.pipe targetFileDirectory
 
 gulp.task 'compile', [
 	'compile:browserify'
