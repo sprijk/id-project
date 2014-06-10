@@ -83,6 +83,7 @@ copyFiles = (sourceStream, destinationStream) ->
 	sourceStream
 		.pipe plainFileFilter
 		.pipe destinationStream
+		.pipe gulpLivereload liveReloadServer
 
 runTests = (exit, reporter, cb) ->
 	mochaInstance = cp.spawn 'mocha', [
