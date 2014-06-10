@@ -1,11 +1,7 @@
-browserify = require 'browserify'
-cp         = require 'child_process'
-es         = require 'event-stream'
-livereload = require 'tiny-lr'
-path       = require 'path'
-source     = require 'vinyl-source-stream'
-watchify   = require 'watchify'
-
+browserify     = require 'browserify'
+cp             = require 'child_process'
+es             = require 'event-stream'
+fs             = require 'fs'
 gulp           = require 'gulp'
 gulpClean      = require 'gulp-clean'
 gulpCoffee     = require 'gulp-coffee'
@@ -15,8 +11,11 @@ gulpLess       = require 'gulp-less'
 gulpLivereload = require 'gulp-livereload'
 gulpNodemon    = require 'gulp-nodemon'
 gulpWatch      = require 'gulp-watch'
-
-log = console.log.bind console
+livereload     = require 'tiny-lr'
+path           = require 'path'
+rimraf         = require 'rimraf'
+source         = require 'vinyl-source-stream'
+watchify       = require 'watchify'
 
 config =
 	directories:
@@ -60,26 +59,19 @@ compileCoffee = (source, destination) ->
 		.pipe destination
 
 # Filters out less files and sends them to the templateCompiler.
-compileLess = (input) ->
-	lessFilter          = gulpFilter "**/*.less"
-	cssFilter           = gulpFilter "**/*.css"
+compileLess = (cb) ->
 	sourceFilePath      = gulp.src "#{config.directories.source}/#{config.directories.client}/less/app.less"
 	targetFileDirectory = gulp.dest "#{config.directories.build}/#{config.directories.client}/css"
 
-	compile = ->
-		sourceFilePath
-			.pipe gulpLess()
-			.pipe targetFileDirectory
-			.pipe gulpLivereload liveReloadServer
+	if cb
+		targetFileDirectory.once 'end', cb
 
-	if input
-		lessFilter.on 'data', compile
+	sourceFilePath
+		.pipe gulpLess()
+		.pipe targetFileDirectory
+		.pipe gulpLivereload liveReloadServer
 
-		input
-			.pipe lessFilter
-
-	else
-		compile()
+	return
 
 copyFiles = (sourceStream, destinationStream) ->
 	plainFileFilter = gulpFilter [
@@ -91,6 +83,7 @@ copyFiles = (sourceStream, destinationStream) ->
 	sourceStream
 		.pipe plainFileFilter
 		.pipe destinationStream
+		.pipe gulpLivereload liveReloadServer
 
 runTests = (exit, reporter, cb) ->
 	mochaInstance = cp.spawn 'mocha', [
@@ -144,8 +137,13 @@ watchFiles = ->
 		destinationStream = gulp.dest "#{config.directories.build}"
 
 		compileCoffee sourceStream, destinationStream
-		compileLess   sourceStream, destinationStream
 		copyFiles     sourceStream, destinationStream
+
+		lessFilter = gulpFilter "**/*.less"
+		lessFilter.on 'data', compileLess
+
+		sourceStream
+			.pipe lessFilter
 
 watchTest = ->
 	gulpWatch {
@@ -174,10 +172,10 @@ watchNodemon = ->
 			"#{config.directories.build}/#{config.directories.server}/**/*.js"
 		]
 
-
-gulp.task 'clean', ->
-	gulp.src ["#{config.directories.build}/**/*.js", "#{config.directories.build}/**/*.css"], read: false
-		.pipe gulpClean force: true
+gulp.task 'clean', (cb) ->
+	rimraf 'build', (error) ->
+		return cb error if error
+		fs.mkdir 'build', cb
 
 gulp.task 'copy', ['clean'], ->
 	sourceStream = gulp.src [
@@ -200,8 +198,7 @@ gulp.task 'compile:coffee', ['clean'], ->
 	compileCoffee sourceStream, destinationStream
 
 gulp.task 'compile:less', ['clean'], (cb) ->
-	compileLess()
-	cb()
+	compileLess cb
 
 gulp.task 'compile:browserify', ['copy', 'compile:coffee'], ->
 	sourceFilePath      = "#{__dirname}/#{config.directories.build}/#{config.directories.client}/js/app.js"
