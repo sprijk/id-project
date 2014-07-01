@@ -1,0 +1,1 @@
+window.searchData = [{"t":"src/client/js/app/app.coffee","p":"file/src/client/js/app/app.coffee.html"},{"t":"src/server/app.coffee","p":"file/src/server/app.coffee.html"},{"t":"src/shared/index.coffee","p":"file/src/shared/index.coffee.html"}]
