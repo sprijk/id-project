@@ -1,7 +1,7 @@
 {
-  "name": "id-project",
-  "version": "0.7.0",
-  "description": "JavaScript project structure on which I'm basing other projects.",
+  "name": "gulpfile",
+  "version": "1.0.0",
+  "description": "JavaScript project structure on which we're basing other projects.",
   "main": "index.js",
   "author": "",
   "license": "ISC",
