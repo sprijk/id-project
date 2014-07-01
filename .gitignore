@@ -1,2 +1,4 @@
-build
+bower_components
+db
+documentation
 node_modules
