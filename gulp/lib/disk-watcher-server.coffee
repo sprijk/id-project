@@ -3,10 +3,12 @@ net = require 'net'
 gulp    = require 'gulp'
 seaport = require 'seaport'
 
-watcher = (path) -> gulp.watch path, read: false
+watcher = (path) ->
+  gulp.watch path, read: false
 
-createServer = (path) ->
-	watchEmitter = watcher path
+createServer = (paths) ->
+	emitters = paths.map (p) ->
+		watcher p
 
 	seaportClient = seaport.connect 9000
 
@@ -15,10 +17,12 @@ createServer = (path) ->
 			message = "#{options.type}:#{options.path}"
 			clientStream.write message
 
-		watchEmitter.addListener 'change', clientHandler
+		emitters.forEach (emitter) ->
+			emitter.addListener 'change', clientHandler
 
 		clientStream.on 'close', ->
-			watchEmitter.removeListener 'change', clientHandler
+			emitters.forEach (emitter) ->
+				emitter.removeListener 'change', clientHandler
 
 	server.start = (name, cb) ->
 		server.listen (seaportClient.register "gulp:#{name}"), cb
@@ -38,6 +42,6 @@ connect = (watchServerName, cb) ->
 				type: type
 				path: path
 
-module.exports = 
+module.exports =
 	connect:      connect
 	createServer: createServer
