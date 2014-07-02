@@ -1,6 +1,6 @@
 {
   "name": "gulpfile",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "JavaScript project structure on which we're basing other projects.",
   "main": "index.js",
   "author": "",
