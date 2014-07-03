@@ -1,10 +1,8 @@
 {
   "name": "gulpfile",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "JavaScript project structure on which we're basing other projects.",
   "main": "index.js",
-  "author": "",
-  "license": "ISC",
   "dependencies": {},
   "devDependencies": {
     "async": "^0.9.0",
