@@ -7,7 +7,7 @@ packageJSON = require "#{__dirname}/../../package.json"
 gulp.task 'compile-documentation', (cb) ->
 	childProcess = cp.spawn "#{__dirname}/../../node_modules/.bin/codo", [
 		'--output'
-		'./build/documentation'
+		'docs'
 		'--name'
 		packageJSON.name
 		'--undocumented'
