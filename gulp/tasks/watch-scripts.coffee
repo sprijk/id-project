@@ -4,15 +4,15 @@ path = require 'path'
 gulp           = require 'gulp'
 gulpCoffee     = require 'gulp-coffee'
 gulpLivereload = require 'gulp-livereload'
+log            = require 'id-debug'
 
-diskWatchServer = require '../lib/disk-watcher-server'
+diskWatcher = require '../lib/disk-watcher'
 
-gulp.task 'watch-scripts', [ 'compile-scripts', 'run-disk-watcher-server', 'run-livereload-server' ], (cb) ->
+gulp.task 'watch-scripts', [ 'compile-scripts', 'run-livereload-server' ], (cb) ->
 	compilePath = (sourcePath) ->
 		coffeeCompiler = gulpCoffee bare: true
 
-		coffeeCompiler.on 'error', (error) ->
-			console.log error
+		coffeeCompiler.on 'error', log.error.bind log
 
 		sourceDirectory = path.dirname sourcePath
 		buildDirectory  = sourceDirectory.replace 'src', 'build'
@@ -27,9 +27,9 @@ gulp.task 'watch-scripts', [ 'compile-scripts', 'run-disk-watcher-server', 'run-
 			.replace '.coffee', '.js'
 
 		fs.unlink targetPath, (error) ->
-			console.log error if error
+			log.error error if error
 
-	watchClient = diskWatchServer.connect 'disk-watcher-server', (options) ->
+	diskWatcher.src.on 'change', (options) ->
 		return unless options.path.match /\.coffee$/
 
 		switch options.type

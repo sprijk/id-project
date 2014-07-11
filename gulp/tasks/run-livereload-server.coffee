@@ -1,17 +1,21 @@
+net = require 'net'
+
 gulp           = require 'gulp'
 gulpLivereload = require 'gulp-livereload'
-net            = require 'net'
-seaport        = require 'seaport'
+log            = require 'id-debug'
 
 gulp.task 'run-livereload-server', (cb) ->
 	# Attempt a connection.
 	connection = net.connect 35729
 
 	# When successful, continue.
-	connection.on 'connect', cb
+	connection.on 'connect', ->
+		cb()
 
-	# When unsuccessful, spawn a new Seaport server.
+	# When unsuccessful, spawn a new server.
 	connection.on 'error', ->
-		gulpLivereload.listen cb
+		log.info 'Livereload server does not exist. Starting one.'
+		gulpLivereload.listen()
+		cb()
 
 	return
