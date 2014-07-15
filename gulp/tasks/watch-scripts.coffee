@@ -29,7 +29,7 @@ gulp.task 'watch-scripts', [ 'compile-scripts', 'run-livereload-server' ], (cb) 
 		fs.unlink targetPath, (error) ->
 			log.error error if error
 
-	diskWatcher.src.on 'change', (options) ->
+	diskWatcher.src().on 'change', (options) ->
 		return unless options.path.match /\.coffee$/
 
 		switch options.type
