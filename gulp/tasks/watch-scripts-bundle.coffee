@@ -3,6 +3,7 @@ path = require 'path'
 
 gulp           = require 'gulp'
 gulpLivereload = require 'gulp-livereload'
+log            = require 'id-debug'
 vinylSource    = require 'vinyl-source-stream'
 watchify       = require 'watchify'
 
@@ -20,8 +21,7 @@ gulp.task 'watch-scripts-bundle', [ 'compile-scripts-bundle', 'run-livereload-se
 	compile = ->
 		bundle = bundler.bundle debug: true
 
-		bundle.on 'error', (error) ->
-			console.log error.stack
+		bundle.on 'error', log.error.bind log
 
 		bundle
 			.pipe vinylSource 'app.bundle.js'

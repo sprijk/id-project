@@ -10,11 +10,7 @@ copy = (path, cb) ->
 
 	readStream.on 'error', cb
 	writeStream.on 'error', cb
-
-	writeStream.on 'finish', ->
-		console.log "watch-files: #{targetPath}"
-
-		cb()
+	writeStream.on 'finish', cb
 
 	readStream
 		.pipe writeStream

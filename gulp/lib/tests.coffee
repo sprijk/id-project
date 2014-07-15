@@ -16,11 +16,10 @@ tests = (exit, reporter, cb) ->
 	childProcess.stderr.on 'data', (chunk) ->
 		process.stderr.write chunk
 
-	if exit
-		childProcess.once 'close', ->
+	childProcess.once 'close', ->
+		if exit
 			process.exit()
-	else
-		cb()
+		else
+			cb()
 
-module.exports =
-	tests: tests
+module.exports = tests

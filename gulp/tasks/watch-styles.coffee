@@ -4,10 +4,11 @@ path = require 'path'
 gulp           = require 'gulp'
 gulpLess       = require 'gulp-less'
 gulpLivereload = require 'gulp-livereload'
+log            = require 'id-debug'
 
-diskWatchServer = require '../lib/disk-watcher-server'
+diskWatcher = require '../lib/disk-watcher'
 
-gulp.task 'watch-styles', [ 'compile-styles', 'run-disk-watcher-server', 'run-livereload-server' ], (cb) ->
+gulp.task 'watch-styles', [ 'compile-styles', 'run-livereload-server' ], (cb) ->
 	compilePath = (sourcePath) ->
 		sourceDirectory = path.dirname sourcePath
 		buildDirectory  = sourceDirectory
@@ -27,9 +28,9 @@ gulp.task 'watch-styles', [ 'compile-styles', 'run-disk-watcher-server', 'run-li
 			.replace '/less', '/css'
 
 		fs.unlink targetPath, (error) ->
-			console.log error if error
+			log.error error if error
 
-	watchClient = diskWatchServer.connect 'disk-watcher-server', (options) ->
+	diskWatcher.src.on 'change', (options) ->
 		return unless options.path.match /\.less/
 
 		switch options.type

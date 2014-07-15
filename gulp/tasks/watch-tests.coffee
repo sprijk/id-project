@@ -1,27 +1,25 @@
 fs   = require 'fs'
+gulp = require 'gulp'
 path = require 'path'
 
-gulp           = require 'gulp'
-gulpCoffee     = require 'gulp-coffee'
-gulpLivereload = require 'gulp-livereload'
-
-{ tests }       = require '../lib/run'
-diskWatchServer = require '../lib/disk-watcher-server'
+diskWatcher = require '../lib/disk-watcher'
+tests       = require '../lib/tests'
 
 runTests = ->
-	tests false, 'list', ->
+	tests false, 'spec', ->
 
-gulp.task 'watch-tests', [ 'compile', 'run-disk-watcher-server' ], (cb) ->
-	watchClient = diskWatchServer.connect 'disk-watcher-server', (options) ->
-		return unless options.path.match /\.coffee/
+changeHandler = (options) ->
+	return unless options.path.match /\.coffee/
 
-		targetPath = options.path.replace 'src', 'build'
+	switch options.type
+		when 'changed'
+			runTests()
 
-		switch options.type
-			when 'changed'
-				runTests()
+		when 'added'
+			runTests()
 
-			when 'added'
-				runTests()
+gulp.task 'watch-tests', [ 'compile' ], (cb) ->
+	diskWatcher.src.on  'change', changeHandler
+	diskWatcher.test.on 'change', changeHandler
 
 	runTests()
