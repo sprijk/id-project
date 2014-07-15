@@ -19,7 +19,7 @@ changeHandler = (options) ->
 			runTests()
 
 gulp.task 'watch-tests', [ 'compile' ], (cb) ->
-	diskWatcher.src.on  'change', changeHandler
-	diskWatcher.test.on 'change', changeHandler
+	diskWatcher.src().on  'change', changeHandler
+	diskWatcher.test().on 'change', changeHandler
 
 	runTests()

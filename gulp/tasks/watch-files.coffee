@@ -15,7 +15,7 @@ reloadPath = (path) ->
 			path: path
 
 gulp.task 'watch-files', [ 'compile-files', 'run-livereload-server' ], (cb) ->
-	diskWatcher.src.on 'change', (options) ->
+	diskWatcher.src().on 'change', (options) ->
 		return if options.path.match /\.(coffee|less)/
 
 		switch options.type
