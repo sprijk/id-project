@@ -1,1 +1,3 @@
-require './gulp/init'
+options = {}
+
+(require './src/server/app') options

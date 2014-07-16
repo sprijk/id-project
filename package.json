@@ -3,7 +3,9 @@
   "version": "1.3.0",
   "description": "JavaScript project structure on which we're basing other projects.",
   "main": "app.js",
-  "dependencies": {},
+  "dependencies": {
+    "lsr": "^1.0.0"
+  },
   "devDependencies": {
     "async": "^0.9.0",
     "browserify": "^4.1.8",
