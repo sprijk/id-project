@@ -1,5 +1,5 @@
 {
-  "name": "gulpfile",
+  "name": "id-project",
   "version": "1.3.0",
   "description": "JavaScript project structure on which we're basing other projects.",
   "main": "app.js",
