@@ -5,6 +5,7 @@ cp = require('child_process');
 docs = function(exit, cb) {
   var childProcess;
   childProcess = cp.spawn("" + __dirname + "/../../../node_modules/.bin/codo", ['--output', 'docs', '--undocumented', '--private', 'src']);
+  childProcess.stdout.on('data', function(chunk) {});
   childProcess.stderr.on('data', function(chunk) {
     return process.stderr.write(chunk);
   });

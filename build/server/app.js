@@ -18,7 +18,7 @@ defaultOptions = {
 };
 
 module.exports = function(options) {
-  var k, stat, stats, tasksDirectoryPath, v, _i, _len, _results;
+  var k, stat, stats, tasksDirectoryPath, v, _i, _len;
   if (options == null) {
     options = {};
   }
@@ -31,14 +31,11 @@ module.exports = function(options) {
   }
   global.idProjectOptions = options;
   stats = lsr.sync(tasksDirectoryPath);
-  _results = [];
   for (_i = 0, _len = stats.length; _i < _len; _i++) {
     stat = stats[_i];
     if (!stat.isDirectory()) {
-      _results.push(require(stat.fullPath));
-    } else {
-      _results.push(void 0);
+      log.debug('Requiring module', stat.fullPath);
+      require(stat.fullPath);
     }
   }
-  return _results;
 };
