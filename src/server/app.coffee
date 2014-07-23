@@ -26,4 +26,8 @@ module.exports = (options = {}) ->
 
 	for stat in stats
 		unless stat.isDirectory()
+			log.debug 'Requiring module', stat.fullPath
+
 			require stat.fullPath
+
+	return
