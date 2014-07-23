@@ -1,6 +1,6 @@
 {
   "name": "id-project",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "JavaScript project structure on which we're basing other projects.",
   "repository": {
     "type" : "git",
@@ -13,7 +13,6 @@
     "codo": "^2.0.9",
     "coffee-script": "^1.7.1",
     "debowerify": "^0.7.1",
-    "gulp": "^3.8.1",
     "gulp-coffee": "^2.0.1",
     "gulp-less": "^1.2.3",
     "gulp-livereload": "^2.0.0",

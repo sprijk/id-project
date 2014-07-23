@@ -9,8 +9,8 @@ docs = (exit, cb) ->
 		'src'
 	]
 
-	#childProcess.stdout.on 'data', (chunk) ->
-	#	process.stdout.write chunk
+	childProcess.stdout.on 'data', (chunk) ->
+		#process.stdout.write chunk
 
 	childProcess.stderr.on 'data', (chunk) ->
 		process.stderr.write chunk
