@@ -10,7 +10,7 @@ tests       = require '../../lib/tests'
 options = idProjectOptions
 
 runTests = ->
-	tests false, 'spec', ->
+	tests false, 'progress', ->
 
 changeHandler = (options) ->
 	return unless options.path.match /\.coffee/
