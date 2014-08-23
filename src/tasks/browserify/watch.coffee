@@ -7,7 +7,7 @@ log            = require 'id-debug'
 vinylSource    = require 'vinyl-source-stream'
 watchify       = require 'watchify'
 
-entryFilePath   = './build/client/js/app/app.js'
+entryFilePath   = './build/client/js/app/index.js'
 targetDirectory = './build/client/js/app'
 options         = idProjectOptions
 
