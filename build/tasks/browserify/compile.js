@@ -12,7 +12,7 @@ vinylSource = require('vinyl-source-stream');
 
 Transform = require('stream').Transform;
 
-entryFilePath = './build/client/js/app/app.js';
+entryFilePath = './build/client/js/app/index.js';
 
 targetDirectory = './build/client/js/app';
 

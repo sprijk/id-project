@@ -15,7 +15,7 @@ tests = require('../../lib/tests');
 options = idProjectOptions;
 
 runTests = function() {
-  return tests(false, 'spec', function() {});
+  return tests(false, 'progress', function() {});
 };
 
 changeHandler = function(options) {
