@@ -1,17 +1,17 @@
 var copy, fs, rimraf, rm;
 
-fs = require('fs');
+fs = require("fs");
 
-rimraf = require('rimraf');
+rimraf = require("rimraf");
 
 copy = function(path, cb) {
   var readStream, targetPath, writeStream;
-  targetPath = path.replace('src', 'build');
+  targetPath = path.replace("src", "build");
   readStream = fs.createReadStream(path);
   writeStream = fs.createWriteStream(targetPath);
-  readStream.on('error', cb);
-  writeStream.on('error', cb);
-  writeStream.on('finish', cb);
+  readStream.on("error", cb);
+  writeStream.on("error", cb);
+  writeStream.on("finish", cb);
   return readStream.pipe(writeStream);
 };
 

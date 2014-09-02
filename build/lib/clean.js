@@ -1,8 +1,8 @@
 var cleanBuildDirectory, mkdirp, rimraf;
 
-mkdirp = require('mkdirp');
+mkdirp = require("mkdirp");
 
-rimraf = require('rimraf');
+rimraf = require("rimraf");
 
 cleanBuildDirectory = function(buildDirectoryPath, cb) {
   return rimraf(buildDirectoryPath, function(error) {

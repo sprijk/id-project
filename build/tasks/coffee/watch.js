@@ -1,22 +1,22 @@
 var diskWatcher, fs, gulp, gulpCoffee, gulpLivereload, log, options, path;
 
-fs = require('fs');
+fs = require("fs");
 
-path = require('path');
+path = require("path");
 
-gulp = require('gulp');
+gulp = require("gulp");
 
-gulpCoffee = require('gulp-coffee');
+gulpCoffee = require("gulp-coffee");
 
-gulpLivereload = require('gulp-livereload');
+gulpLivereload = require("gulp-livereload");
 
-log = require('id-debug');
+log = require("id-debug");
 
-diskWatcher = require('../../lib/disk-watcher');
+diskWatcher = require("../../lib/disk-watcher");
 
 options = idProjectOptions;
 
-gulp.task('coffee:watch', ['coffee:compile', 'livereload:run'], function(cb) {
+gulp.task("coffee:watch", ["coffee:compile", "livereload:run"], function(cb) {
   var compilePath, removePath;
   if (!(options.coffee === true && options.watch === true)) {
     log.info("Skipping browserify:watch: Disabled.");
@@ -27,30 +27,30 @@ gulp.task('coffee:watch', ['coffee:compile', 'livereload:run'], function(cb) {
     coffeeCompiler = gulpCoffee({
       bare: true
     });
-    coffeeCompiler.on('error', log.error.bind(log));
+    coffeeCompiler.on("error", log.error.bind(log));
     sourceDirectory = path.dirname(sourcePath);
-    buildDirectory = sourceDirectory.replace('src', 'build');
+    buildDirectory = sourceDirectory.replace("src", "build");
     return gulp.src(sourcePath).pipe(coffeeCompiler).pipe(gulp.dest(buildDirectory));
   };
   removePath = function(sourcePath) {
     var targetPath;
-    targetPath = sourcePath.replace('src', 'build').replace('.coffee', '.js');
+    targetPath = sourcePath.replace("src", "build").replace(".coffee", ".js");
     return fs.unlink(targetPath, function(error) {
       if (error) {
         return log.error(error);
       }
     });
   };
-  diskWatcher.src().on('change', function(options) {
+  diskWatcher.src().on("change", function(options) {
     if (!options.path.match(/\.coffee$/)) {
       return;
     }
     switch (options.type) {
-      case 'changed':
+      case "changed":
         return compilePath(options.path);
-      case 'added':
+      case "added":
         return compilePath(options.path);
-      case 'deleted':
+      case "deleted":
         return removePath(options.path);
     }
   });

@@ -1,14 +1,14 @@
 var gulp, gulpCoffee, log, options;
 
-gulp = require('gulp');
+gulp = require("gulp");
 
-gulpCoffee = require('gulp-coffee');
+gulpCoffee = require("gulp-coffee");
 
-log = require('id-debug');
+log = require("id-debug");
 
 options = idProjectOptions;
 
-gulp.task('coffee:compile', function(cb) {
+gulp.task("coffee:compile", function(cb) {
   var coffeeCompiler;
   if (options.coffee !== true) {
     log.info("Skipping coffee:compile: Disabled.");
@@ -17,6 +17,6 @@ gulp.task('coffee:compile', function(cb) {
   coffeeCompiler = gulpCoffee({
     bare: true
   });
-  coffeeCompiler.on('error', log.error.bind(log));
-  gulp.src('src/**/*.coffee').pipe(coffeeCompiler).pipe(gulp.dest('build')).on('end', cb);
+  coffeeCompiler.on("error", log.error.bind(log));
+  gulp.src("src/**/*.coffee").pipe(coffeeCompiler).pipe(gulp.dest("build")).on("end", cb);
 });

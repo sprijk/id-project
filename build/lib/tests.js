@@ -1,17 +1,21 @@
-var cp, tests;
+var cp, path, pathToMocha, tests;
 
-cp = require('child_process');
+path = require("path");
+
+cp = require("child_process");
+
+pathToMocha = path.resolve("" + __dirname + "/../../node_modules/.bin/mocha");
 
 tests = function(exit, reporter, cb) {
   var childProcess;
-  childProcess = cp.spawn('mocha', ['--recursive', '--compilers', 'coffee:coffee-script/register', '--reporter', reporter, 'test']);
-  childProcess.stdout.on('data', function(chunk) {
+  childProcess = cp.spawn(pathToMocha, ["--recursive", "--compilers", "coffee:coffee-script/register", "--reporter", reporter, "test"]);
+  childProcess.stdout.on("data", function(chunk) {
     return process.stdout.write(chunk);
   });
-  childProcess.stderr.on('data', function(chunk) {
+  childProcess.stderr.on("data", function(chunk) {
     return process.stderr.write(chunk);
   });
-  return childProcess.once('close', function() {
+  return childProcess.once("close", function() {
     if (exit) {
       return process.exit();
     } else {

@@ -1,15 +1,15 @@
 var gulp, log, options;
 
-gulp = require('gulp');
+gulp = require("gulp");
 
-log = require('id-debug');
+log = require("id-debug");
 
 options = idProjectOptions;
 
-gulp.task('copy:compile', function(cb) {
+gulp.task("copy:compile", function(cb) {
   if (options.copy !== true) {
     log.info("Skipping copy:compile: Disabled.");
     return cb();
   }
-  gulp.src(['src/**/*', '!**/*.coffee', '!**/*.less']).pipe(gulp.dest('build')).on('end', cb);
+  gulp.src(["src/**/*", "!**/*.coffee", "!**/*.less"]).pipe(gulp.dest("build")).on("end", cb);
 });

@@ -1,24 +1,24 @@
 var Transform, browserify, entryFilePath, fs, gulp, log, options, targetDirectory, vinylSource;
 
-fs = require('fs');
+fs = require("fs");
 
-browserify = require('browserify');
+browserify = require("browserify");
 
-gulp = require('gulp');
+gulp = require("gulp");
 
-log = require('id-debug');
+log = require("id-debug");
 
-vinylSource = require('vinyl-source-stream');
+vinylSource = require("vinyl-source-stream");
 
-Transform = require('stream').Transform;
+Transform = require("stream").Transform;
 
-entryFilePath = './build/client/js/app/index.js';
+entryFilePath = "./build/client/js/app/index.js";
 
-targetDirectory = './build/client/js/app';
+targetDirectory = "./build/client/js/app";
 
 options = idProjectOptions;
 
-gulp.task('browserify:compile', ['coffee:compile', 'copy:compile'], function(cb) {
+gulp.task("browserify:compile", ["coffee:compile", "copy:compile"], function(cb) {
   if (options.browserify !== true) {
     log.info("Skipping browserify:compile: Disabled.");
     return cb();
@@ -31,14 +31,14 @@ gulp.task('browserify:compile', ['coffee:compile', 'copy:compile'], function(cb)
     }
     bundler = browserify({
       entries: [entryFilePath],
-      extensions: ['.js', '.json', '.jade']
+      extensions: [".js", ".json", ".jade"]
     });
-    bundler.transform('jadeify');
-    bundler.transform('debowerify');
+    bundler.transform("jadeify");
+    bundler.transform("debowerify");
     bundle = bundler.bundle({
       debug: true
     });
-    bundle.on('error', log.error.bind(log));
-    bundle.pipe(vinylSource('app.bundle.js')).pipe(gulp.dest(targetDirectory)).on('end', cb);
+    bundle.on("error", log.error.bind(log));
+    bundle.pipe(vinylSource("app.bundle.js")).pipe(gulp.dest(targetDirectory)).on("end", cb);
   });
 });
