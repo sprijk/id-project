@@ -7,5 +7,5 @@
 	less:          false
 	livereload:    false
 	nodemon:       false
-	tests:         false
+	tests:         true
 	watch:         true
