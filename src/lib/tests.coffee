@@ -1,7 +1,10 @@
+path = require "path"
 cp = require "child_process"
 
+pathToMocha = path.resolve "#{__dirname}/../../node_modules/.bin/mocha"
+
 tests = (exit, reporter, cb) ->
-	childProcess = cp.spawn "mocha", [
+	childProcess = cp.spawn pathToMocha, [
 		"--recursive"
 		"--compilers"
 		"coffee:coffee-script/register"
