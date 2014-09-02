@@ -1,21 +1,21 @@
 var changeHandler, diskWatcher, fs, gulp, log, options, path, runTests, tests;
 
-fs = require('fs');
+fs = require("fs");
 
-path = require('path');
+path = require("path");
 
-gulp = require('gulp');
+gulp = require("gulp");
 
-log = require('id-debug');
+log = require("id-debug");
 
-diskWatcher = require('../../lib/disk-watcher');
+diskWatcher = require("../../lib/disk-watcher");
 
-tests = require('../../lib/tests');
+tests = require("../../lib/tests");
 
 options = idProjectOptions;
 
 runTests = function() {
-  return tests(false, 'progress', function() {});
+  return tests(false, "progress", function() {});
 };
 
 changeHandler = function(options) {
@@ -23,19 +23,19 @@ changeHandler = function(options) {
     return;
   }
   switch (options.type) {
-    case 'changed':
+    case "changed":
       return runTests();
-    case 'added':
+    case "added":
       return runTests();
   }
 };
 
-gulp.task('tests:watch', ['compile'], function(cb) {
+gulp.task("tests:watch", ["compile"], function(cb) {
   if (!(options.tests === true && options.watch === true)) {
     log.info("Skipping tests:watch: Disabled.");
     return cb();
   }
-  diskWatcher.src().on('change', changeHandler);
-  diskWatcher.test().on('change', changeHandler);
+  diskWatcher.src().on("change", changeHandler);
+  diskWatcher.test().on("change", changeHandler);
   runTests();
 });

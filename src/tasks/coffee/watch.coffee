@@ -1,16 +1,16 @@
-fs   = require 'fs'
-path = require 'path'
+fs   = require "fs"
+path = require "path"
 
-gulp           = require 'gulp'
-gulpCoffee     = require 'gulp-coffee'
-gulpLivereload = require 'gulp-livereload'
-log            = require 'id-debug'
+gulp           = require "gulp"
+gulpCoffee     = require "gulp-coffee"
+gulpLivereload = require "gulp-livereload"
+log            = require "id-debug"
 
-diskWatcher = require '../../lib/disk-watcher'
+diskWatcher = require "../../lib/disk-watcher"
 
 options = idProjectOptions
 
-gulp.task 'coffee:watch', [ 'coffee:compile', 'livereload:run' ], (cb) ->
+gulp.task "coffee:watch", [ "coffee:compile", "livereload:run" ], (cb) ->
 	unless options.coffee is true and options.watch is true
 		log.info "Skipping browserify:watch: Disabled."
 		return cb()
@@ -18,10 +18,10 @@ gulp.task 'coffee:watch', [ 'coffee:compile', 'livereload:run' ], (cb) ->
 	compilePath = (sourcePath) ->
 		coffeeCompiler = gulpCoffee bare: true
 
-		coffeeCompiler.on 'error', log.error.bind log
+		coffeeCompiler.on "error", log.error.bind log
 
 		sourceDirectory = path.dirname sourcePath
-		buildDirectory  = sourceDirectory.replace 'src', 'build'
+		buildDirectory  = sourceDirectory.replace "src", "build"
 
 		gulp.src sourcePath
 			.pipe coffeeCompiler
@@ -29,23 +29,23 @@ gulp.task 'coffee:watch', [ 'coffee:compile', 'livereload:run' ], (cb) ->
 
 	removePath = (sourcePath) ->
 		targetPath = sourcePath
-			.replace 'src',     'build'
-			.replace '.coffee', '.js'
+			.replace "src",     "build"
+			.replace ".coffee", ".js"
 
 		fs.unlink targetPath, (error) ->
 			log.error error if error
 
-	diskWatcher.src().on 'change', (options) ->
+	diskWatcher.src().on "change", (options) ->
 		return unless options.path.match /\.coffee$/
 
 		switch options.type
-			when 'changed'
+			when "changed"
 				compilePath options.path
 
-			when 'added'
+			when "added"
 				compilePath options.path
 
-			when 'deleted'
+			when "deleted"
 				removePath options.path
 
 	return

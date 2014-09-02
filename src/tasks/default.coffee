@@ -1,4 +1,4 @@
-gulp = require 'gulp'
+gulp = require "gulp"
 
-gulp.task 'default', [ 'clean' ], ->
-	gulp.start 'watch'
+gulp.task "default", [ "clean" ], ->
+	gulp.start "watch"

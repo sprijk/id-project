@@ -1,26 +1,26 @@
 var entryFilePath, fs, gulp, gulpLivereload, log, options, path, targetDirectory, vinylSource, watchify;
 
-fs = require('fs');
+fs = require("fs");
 
-path = require('path');
+path = require("path");
 
-gulp = require('gulp');
+gulp = require("gulp");
 
-gulpLivereload = require('gulp-livereload');
+gulpLivereload = require("gulp-livereload");
 
-log = require('id-debug');
+log = require("id-debug");
 
-vinylSource = require('vinyl-source-stream');
+vinylSource = require("vinyl-source-stream");
 
-watchify = require('watchify');
+watchify = require("watchify");
 
-entryFilePath = './build/client/js/app/index.js';
+entryFilePath = "./build/client/js/app/index.js";
 
-targetDirectory = './build/client/js/app';
+targetDirectory = "./build/client/js/app";
 
 options = idProjectOptions;
 
-gulp.task('browserify:watch', ['browserify:compile', 'livereload:run'], function(cb) {
+gulp.task("browserify:watch", ["browserify:compile", "livereload:run"], function(cb) {
   if (!(options.browserify === true && options.watch === true)) {
     log.info("Skipping browserify:watch: Disabled.");
     return cb();
@@ -33,21 +33,21 @@ gulp.task('browserify:watch', ['browserify:compile', 'livereload:run'], function
     }
     bundler = watchify({
       entries: [entryFilePath],
-      extensions: ['.js', '.json', '.jade']
+      extensions: [".js", ".json", ".jade"]
     });
-    bundler.transform('jadeify');
-    bundler.transform('debowerify');
+    bundler.transform("jadeify");
+    bundler.transform("debowerify");
     compile = function() {
       var bundle;
       bundle = bundler.bundle({
         debug: true
       });
-      bundle.on('error', log.error.bind(log));
-      return bundle.pipe(vinylSource('app.bundle.js')).pipe(gulp.dest(targetDirectory)).pipe(gulpLivereload({
+      bundle.on("error", log.error.bind(log));
+      return bundle.pipe(vinylSource("app.bundle.js")).pipe(gulp.dest(targetDirectory)).pipe(gulpLivereload({
         auto: false
       }));
     };
-    bundler.on('update', compile);
+    bundler.on("update", compile);
     compile();
   });
 });
