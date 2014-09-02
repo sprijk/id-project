@@ -1,5 +1,5 @@
-mkdirp = require 'mkdirp'
-rimraf = require 'rimraf'
+mkdirp = require "mkdirp"
+rimraf = require "rimraf"
 
 cleanBuildDirectory = (buildDirectoryPath, cb) ->
 	rimraf buildDirectoryPath, (error) ->

@@ -1,17 +1,17 @@
-fs   = require 'fs'
-path = require 'path'
+fs   = require "fs"
+path = require "path"
 
-gulp           = require 'gulp'
-gulpLess       = require 'gulp-less'
-gulpLivereload = require 'gulp-livereload'
-log            = require 'id-debug'
+gulp           = require "gulp"
+gulpLess       = require "gulp-less"
+gulpLivereload = require "gulp-livereload"
+log            = require "id-debug"
 
-diskWatcher = require '../../lib/disk-watcher'
+diskWatcher = require "../../lib/disk-watcher"
 
-entryFilePath = 'src/client/less/app.less'
+entryFilePath = "src/client/less/app.less"
 options         = idProjectOptions
 
-gulp.task 'less:watch', [ 'less:compile', 'livereload:run' ], (cb) ->
+gulp.task "less:watch", [ "less:compile", "livereload:run" ], (cb) ->
 	unless options.less is true and options.watch is true
 		log.info "Skipping less:watch: Disabled."
 		return cb()
@@ -24,9 +24,9 @@ gulp.task 'less:watch', [ 'less:compile', 'livereload:run' ], (cb) ->
 		compilePath = (sourcePath) ->
 			sourceDirectory = path.dirname sourcePath
 			buildDirectory  = sourceDirectory
-				.replace 'src', 'build'
-				.replace '.less', '.css'
-				.replace '/less', '/css'
+				.replace "src", "build"
+				.replace ".less", ".css"
+				.replace "/less", "/css"
 
 			gulp.src sourcePath
 				.pipe gulpLess()
@@ -35,24 +35,24 @@ gulp.task 'less:watch', [ 'less:compile', 'livereload:run' ], (cb) ->
 
 		removePath = (sourcePath) ->
 			targetPath = sourcePath
-				.replace 'src',   'build'
-				.replace '.less', '.css'
-				.replace '/less', '/css'
+				.replace "src",   "build"
+				.replace ".less", ".css"
+				.replace "/less", "/css"
 
 			fs.unlink targetPath, (error) ->
 				log.error error if error
 
-		diskWatcher.src().on 'change', (options) ->
+		diskWatcher.src().on "change", (options) ->
 			return unless options.path.match /\.less/
 
 			switch options.type
-				when 'changed'
-					compilePath './src/client/less/app.less'
+				when "changed"
+					compilePath "./src/client/less/app.less"
 
-				when 'added'
-					compilePath './src/client/less/app.less'
+				when "added"
+					compilePath "./src/client/less/app.less"
 
-				when 'deleted'
+				when "deleted"
 					removePath options.path
 
 	return
