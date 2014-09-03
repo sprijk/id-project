@@ -1,5 +1,11 @@
 A gulp based project structure and compilation automation.
 
+## Installation
+
+```bash
+$ npm install --save id-project gulp coffee-script
+```
+
 ## Usage
 
 1. Put a file named `gulpfile.coffee` in your project directory containing:
