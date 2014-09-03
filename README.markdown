@@ -1,5 +1,35 @@
 A gulp based project structure and compilation automation.
 
+## Usage
+Put a file named `gulpfile.coffee` in your project directory containing:
+
+```coffee
+require "id-project"
+```
+
+### Default options
+```coffee
+require "id-project"
+	browserify:                    true
+	browserifyEntryFilePath:       "./build/client/js/app/app.js"
+	browserifyTargetFilename:      "app.bundle.js"
+	browserifyTargetDirectoryPath: "./build/client/js/app"
+	clean:                         true
+	coffee:                        true
+	copy:                          true
+	documentation:                 true
+	less:                          true
+	lessEntryFilePath:             "./src/client/less/app.less"
+	lessTargetDirectoryPath:       "./build/client/css"
+	livereload:                    true
+	nodemon:                       true
+	nodemonEntryFilePath:          "./app.js"
+	nodemonWatchGlob:              [ "build/server/**/*.js" ]
+	tests:                         true
+	testsDirectoryPath:            "./test"
+	watch:                         true
+```
+
 # Features
 
 ## Clean
