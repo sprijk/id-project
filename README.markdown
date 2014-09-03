@@ -3,10 +3,13 @@ A gulp based project structure and compilation automation.
 ## Usage
 
 1. Put a file named `gulpfile.coffee` in your project directory containing:
+
    ```coffee
    require "id-project"
    ```
+
 2. Run the gulpfile from the commandline:
+
    ```bash
    $ gulp
    ```
