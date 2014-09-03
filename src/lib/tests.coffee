@@ -5,10 +5,9 @@ cp   = require "child_process"
 log = require "id-debug"
 
 pathToMocha = path.resolve "#{__dirname}/../../node_modules/.bin/mocha"
-pathToTestsDirectory = path.resolve "#{__dirname}/../../test"
 
-tests = (exit, reporter, cb) ->
-	fs.exists pathToTestsDirectory, (exists) ->
+tests = (directory, exit, reporter, cb) ->
+	fs.exists directory, (exists) ->
 		unless exists
 			log.info "Skipping mocha: Directory `#{pathToTestsDirectory}` not found."
 			return cb()

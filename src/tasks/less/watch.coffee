@@ -8,8 +8,9 @@ log            = require "id-debug"
 
 diskWatcher = require "../../lib/disk-watcher"
 
-entryFilePath = "src/client/less/app.less"
-options         = idProjectOptions
+options             = idProjectOptions
+entryFilePath       = options.lessEntryFilePath
+targetDirectoryPath = options.lessTargetDirectoryPath
 
 gulp.task "less:watch", [ "less:compile", "livereload:run" ], (cb) ->
 	unless options.less is true and options.watch is true
@@ -23,14 +24,10 @@ gulp.task "less:watch", [ "less:compile", "livereload:run" ], (cb) ->
 
 		compilePath = (sourcePath) ->
 			sourceDirectory = path.dirname sourcePath
-			buildDirectory  = sourceDirectory
-				.replace "src", "build"
-				.replace ".less", ".css"
-				.replace "/less", "/css"
 
 			gulp.src sourcePath
 				.pipe gulpLess()
-				.pipe gulp.dest buildDirectory
+				.pipe gulp.dest targetDirectoryPath
 				.pipe gulpLivereload auto: false
 
 		removePath = (sourcePath) ->
@@ -47,10 +44,10 @@ gulp.task "less:watch", [ "less:compile", "livereload:run" ], (cb) ->
 
 			switch options.type
 				when "changed"
-					compilePath "./src/client/less/app.less"
+					compilePath entryFilePath
 
 				when "added"
-					compilePath "./src/client/less/app.less"
+					compilePath entryFilePath
 
 				when "deleted"
 					removePath options.path

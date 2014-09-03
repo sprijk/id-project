@@ -4,8 +4,9 @@ gulp     = require "gulp"
 gulpLess = require "gulp-less"
 log      = require "id-debug"
 
-entryFilePath = "src/client/less/app.less"
-options       = idProjectOptions
+options             = idProjectOptions
+entryFilePath       = options.lessEntryFilePath
+targetDirectoryPath = options.lessTargetDirectoryPath
 
 gulp.task "less:compile", (cb) ->
 	unless options.less is true
@@ -19,7 +20,7 @@ gulp.task "less:compile", (cb) ->
 
 		gulp.src entryFilePath
 			.pipe gulpLess()
-			.pipe gulp.dest "build/client/css"
+			.pipe gulp.dest lessTargetDirectoryPath
 			.on "end", cb
 
 	return
