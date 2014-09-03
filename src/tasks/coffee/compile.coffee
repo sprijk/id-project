@@ -2,7 +2,7 @@ gulp       = require "gulp"
 gulpCoffee = require "gulp-coffee"
 log        = require "id-debug"
 
-options         = idProjectOptions
+options = idProjectOptions
 
 gulp.task "coffee:compile", (cb) ->
 	unless options.coffee is true

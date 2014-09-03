@@ -6,9 +6,10 @@ log           = require "id-debug"
 vinylSource   = require "vinyl-source-stream"
 { Transform } = require "stream"
 
-entryFilePath   = "./build/client/js/app/index.js"
-targetDirectory = "./build/client/js/app"
-options         = idProjectOptions
+options             = idProjectOptions
+entryFilePath       = options.browserifyEntryFilePath
+targetFilename      = options.browserifyTargetFilename
+targetDirectoryPath = options.browserifyTargetDirectoryPath
 
 gulp.task "browserify:compile", [ "coffee:compile", "copy:compile" ], (cb) ->
 	unless options.browserify is true
@@ -32,8 +33,8 @@ gulp.task "browserify:compile", [ "coffee:compile", "copy:compile" ], (cb) ->
 		bundle.on "error", log.error.bind log
 
 		bundle
-			.pipe vinylSource "app.bundle.js"
-			.pipe gulp.dest targetDirectory
+			.pipe vinylSource targetFilename
+			.pipe gulp.dest targetDirectoryPath
 			.on "end", cb
 
 		return

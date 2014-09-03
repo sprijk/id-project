@@ -7,9 +7,10 @@ log            = require "id-debug"
 vinylSource    = require "vinyl-source-stream"
 watchify       = require "watchify"
 
-entryFilePath   = "./build/client/js/app/index.js"
-targetDirectory = "./build/client/js/app"
-options         = idProjectOptions
+options             = idProjectOptions
+entryFilePath       = options.browserifyEntryFilePath
+targetFilename      = options.browserifyTargetFilename
+targetDirectoryPath = options.browserifyTargetDirectoryPath
 
 gulp.task "browserify:watch", [ "browserify:compile", "livereload:run" ], (cb) ->
 	unless options.browserify is true and options.watch is true
@@ -34,8 +35,8 @@ gulp.task "browserify:watch", [ "browserify:compile", "livereload:run" ], (cb) -
 			bundle.on "error", log.error.bind log
 
 			bundle
-				.pipe vinylSource "app.bundle.js"
-				.pipe gulp.dest targetDirectory
+				.pipe vinylSource targetFilename
+				.pipe gulp.dest targetDirectoryPath
 				.pipe gulpLivereload auto: false
 
 		bundler.on "update", compile
