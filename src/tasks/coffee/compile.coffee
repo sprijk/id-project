@@ -4,6 +4,8 @@ log        = require "id-debug"
 
 {
 	enabled
+	sourceDirectoryPath
+	targetDirectoryPath
 } = idProjectOptions.coffee
 
 gulp.task "coffee:compile", (cb) ->
@@ -15,9 +17,9 @@ gulp.task "coffee:compile", (cb) ->
 
 	coffeeCompiler.on "error", log.error.bind log
 
-	gulp.src "src/**/*.coffee"
+	gulp.src "#{sourceDirectoryPath}/**/*.coffee"
 		.pipe coffeeCompiler
-		.pipe gulp.dest "build"
+		.pipe gulp.dest targetDirectoryPath
 		.on "end", cb
 
 	return

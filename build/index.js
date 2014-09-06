@@ -22,7 +22,9 @@ defaults.clean = {
 };
 
 defaults.coffee = {
-  enabled: true
+  enabled: true,
+  sourceDirectoryPath: defaults.sourceDirectoryPath,
+  targetDirectoryPath: defaults.targetDirectoryPath
 };
 
 defaults.copy = {
