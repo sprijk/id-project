@@ -1,4 +1,4 @@
-var copy, diskWatcher, enabled, fs, gulp, gulpLivereload, log, reloadPath, rm, watchEnabled, _ref;
+var copy, diskWatcher, enabled, fs, gulp, gulpLivereload, log, options, reloadPath, rm, watchEnabled, _ref;
 
 fs = require("fs");
 
@@ -12,7 +12,9 @@ diskWatcher = require("../../lib/disk-watcher");
 
 _ref = require("../../lib/files"), copy = _ref.copy, rm = _ref.rm;
 
-enabled = idProjectOptions.copy.enabled;
+options = idProjectOptions.copy;
+
+enabled = options.enabled;
 
 watchEnabled = idProjectOptions.watch.enabled;
 

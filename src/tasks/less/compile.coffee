@@ -1,14 +1,14 @@
 fs = require "fs"
+path = require "path"
 
 gulp     = require "gulp"
 gulpLess = require "gulp-less"
 log      = require "id-debug"
 
-{
-	enabled
-	entryFilePath
-	targetDirectoryPath
-} = idProjectOptions.less
+options             = idProjectOptions.less
+enabled             = options.enabled
+entryFilePath       = path.resolve options.entryFilePath
+targetDirectoryPath = path.resolve options.targetDirectoryPath
 
 gulp.task "less:compile", (cb) ->
 	unless enabled is true

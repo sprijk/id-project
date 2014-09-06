@@ -8,13 +8,11 @@ log            = require "id-debug"
 
 diskWatcher = require "../../lib/disk-watcher"
 
-{
-	enabled
-	sourceDirectoryPath
-	targetDirectoryPath
-} = idProjectOptions.coffee
-
-watchEnabled = idProjectOptions.watch.enabled
+options             = idProjectOptions.coffee
+enabled             = options.enabled
+sourceDirectoryPath = path.resolve options.sourceDirectoryPath
+targetDirectoryPath = path.resolve options.targetDirectoryPath
+watchEnabled        = idProjectOptions.watch.enabled
 
 gulp.task "coffee:watch", [ "coffee:compile", "livereload:run" ], (cb) ->
 	unless enabled is true and watchEnabled is true

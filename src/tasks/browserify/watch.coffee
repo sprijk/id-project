@@ -2,19 +2,18 @@ fs   = require "fs"
 path = require "path"
 
 gulp           = require "gulp"
+gulpTap        = require "gulp-tap"
 gulpLivereload = require "gulp-livereload"
 log            = require "id-debug"
 vinylSource    = require "vinyl-source-stream"
 watchify       = require "watchify"
 
-{
-	enabled
-	entryFilePath
-	targetFilename
-	targetDirectoryPath
-} = idProjectOptions.browserify
-
-watchEnabled = idProjectOptions.watch.enabled
+options             = idProjectOptions.browserify
+enabled             = options.enabled
+entryFilePath       = path.resolve options.entryFilePath
+targetDirectoryPath = path.resolve options.targetDirectoryPath
+targetFilename      = options.targetFilename
+watchEnabled        = idProjectOptions.watch.enabled
 
 gulp.task "browserify:watch", [ "browserify:compile", "livereload:run" ], (cb) ->
 	unless enabled is true and watchEnabled is true
@@ -34,12 +33,19 @@ gulp.task "browserify:watch", [ "browserify:compile", "livereload:run" ], (cb) -
 		bundler.transform "debowerify"
 
 		compile = ->
+			log.debug "browserify:watch: Compiling `#{entryFilePath}`."
+
 			bundle = bundler.bundle debug: true
 
 			bundle.on "error", log.error.bind log
 
 			bundle
 				.pipe vinylSource targetFilename
+
+				.pipe gulpTap (file) ->
+					log.debug "browserify:compile: Compiling `#{file.path}` into `#{targetDirectoryPath}`."
+					return
+
 				.pipe gulp.dest targetDirectoryPath
 				.pipe gulpLivereload auto: false
 

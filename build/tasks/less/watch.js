@@ -1,4 +1,4 @@
-var diskWatcher, enabled, entryFilePath, fs, gulp, gulpLess, gulpLivereload, log, path, targetDirectoryPath, watchEnabled, _ref;
+var diskWatcher, enabled, entryFilePath, fs, gulp, gulpLess, gulpLivereload, log, options, path, targetDirectoryPath, watchEnabled;
 
 fs = require("fs");
 
@@ -14,7 +14,13 @@ log = require("id-debug");
 
 diskWatcher = require("../../lib/disk-watcher");
 
-_ref = idProjectOptions.less, enabled = _ref.enabled, entryFilePath = _ref.entryFilePath, targetDirectoryPath = _ref.targetDirectoryPath;
+options = idProjectOptions.less;
+
+enabled = options.enabled;
+
+entryFilePath = path.resolve(options.entryFilePath);
+
+targetDirectoryPath = path.resolve(options.targetDirectoryPath);
 
 watchEnabled = idProjectOptions.watch.enabled;
 

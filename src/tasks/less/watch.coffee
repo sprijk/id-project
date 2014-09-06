@@ -8,13 +8,11 @@ log            = require "id-debug"
 
 diskWatcher = require "../../lib/disk-watcher"
 
-{
-	enabled
-	entryFilePath
-	targetDirectoryPath
-} = idProjectOptions.less
-
-watchEnabled = idProjectOptions.watch.enabled
+options             = idProjectOptions.less
+enabled             = options.enabled
+entryFilePath       = path.resolve options.entryFilePath
+targetDirectoryPath = path.resolve options.targetDirectoryPath
+watchEnabled        = idProjectOptions.watch.enabled
 
 gulp.task "less:watch", [ "less:compile", "livereload:run" ], (cb) ->
 	unless enabled is true and watchEnabled is true

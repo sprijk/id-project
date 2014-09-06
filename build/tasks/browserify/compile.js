@@ -1,10 +1,14 @@
-var Transform, browserify, enabled, entryFilePath, fs, gulp, log, targetDirectoryPath, targetFilename, vinylSource, _ref;
+var Transform, browserify, enabled, entryFilePath, fs, gulp, gulpTap, log, options, path, targetDirectoryPath, targetFilename, vinylSource;
 
 fs = require("fs");
+
+path = require("path");
 
 browserify = require("browserify");
 
 gulp = require("gulp");
+
+gulpTap = require("gulp-tap");
 
 log = require("id-debug");
 
@@ -12,7 +16,15 @@ vinylSource = require("vinyl-source-stream");
 
 Transform = require("stream").Transform;
 
-_ref = idProjectOptions.browserify, enabled = _ref.enabled, entryFilePath = _ref.entryFilePath, targetFilename = _ref.targetFilename, targetDirectoryPath = _ref.targetDirectoryPath;
+options = idProjectOptions.browserify;
+
+enabled = options.enabled;
+
+entryFilePath = path.resolve(options.entryFilePath);
+
+targetDirectoryPath = path.resolve(options.targetDirectoryPath);
+
+targetFilename = options.targetFilename;
 
 gulp.task("browserify:compile", ["coffee:compile", "copy:compile"], function(cb) {
   if (enabled !== true) {
@@ -35,6 +47,8 @@ gulp.task("browserify:compile", ["coffee:compile", "copy:compile"], function(cb)
       debug: true
     });
     bundle.on("error", log.error.bind(log));
-    bundle.pipe(vinylSource(targetFilename)).pipe(gulp.dest(targetDirectoryPath)).on("end", cb);
+    bundle.pipe(vinylSource(targetFilename)).pipe(gulpTap(function(file) {
+      log.debug("browserify:compile: Compiling `" + file.path + "` into `" + targetDirectoryPath + "`.");
+    })).pipe(gulp.dest(targetDirectoryPath)).on("end", cb);
   });
 });
