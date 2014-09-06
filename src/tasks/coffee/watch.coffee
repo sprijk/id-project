@@ -8,10 +8,14 @@ log            = require "id-debug"
 
 diskWatcher = require "../../lib/disk-watcher"
 
-options = idProjectOptions
+{
+	enabled
+} = idProjectOptions.coffee
+
+watchEnabled = idProjectOptions.watch.enabled
 
 gulp.task "coffee:watch", [ "coffee:compile", "livereload:run" ], (cb) ->
-	unless options.coffee is true and options.watch is true
+	unless enabled is true and watchEnabled is true
 		log.info "Skipping browserify:watch: Disabled."
 		return cb()
 

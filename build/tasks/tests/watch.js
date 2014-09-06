@@ -1,4 +1,4 @@
-var changeHandler, directoryPath, diskWatcher, fs, gulp, log, options, path, runTests, tests;
+var changeHandler, directoryPath, diskWatcher, enabled, fs, gulp, log, path, runTests, tests, watchEnabled, _ref;
 
 fs = require("fs");
 
@@ -12,9 +12,9 @@ diskWatcher = require("../../lib/disk-watcher");
 
 tests = require("../../lib/tests");
 
-options = idProjectOptions;
+_ref = idProjectOptions.tests, enabled = _ref.enabled, directoryPath = _ref.directoryPath;
 
-directoryPath = options.testsDirectoryPath;
+watchEnabled = idProjectOptions.watch.enabled;
 
 runTests = function() {
   return tests(directoryPath, false, "progress", function() {});
@@ -24,16 +24,11 @@ changeHandler = function(options) {
   if (!options.path.match(/\.coffee/)) {
     return;
   }
-  switch (options.type) {
-    case "changed":
-      return runTests();
-    case "added":
-      return runTests();
-  }
+  return runTests();
 };
 
 gulp.task("tests:watch", ["compile"], function(cb) {
-  if (!(options.tests === true && options.watch === true)) {
+  if (!(enabled === true && watchEnabled === true)) {
     log.info("Skipping tests:watch: Disabled.");
     return cb();
   }

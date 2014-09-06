@@ -1,4 +1,4 @@
-var diskWatcher, fs, gulp, gulpCoffee, gulpLivereload, log, options, path;
+var diskWatcher, enabled, fs, gulp, gulpCoffee, gulpLivereload, log, path, watchEnabled;
 
 fs = require("fs");
 
@@ -14,11 +14,13 @@ log = require("id-debug");
 
 diskWatcher = require("../../lib/disk-watcher");
 
-options = idProjectOptions;
+enabled = idProjectOptions.coffee.enabled;
+
+watchEnabled = idProjectOptions.watch.enabled;
 
 gulp.task("coffee:watch", ["coffee:compile", "livereload:run"], function(cb) {
   var compilePath, removePath;
-  if (!(options.coffee === true && options.watch === true)) {
+  if (!(enabled === true && watchEnabled === true)) {
     log.info("Skipping browserify:watch: Disabled.");
     return cb();
   }

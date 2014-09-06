@@ -5,22 +5,25 @@ gulp        = require "gulp"
 gulpNodemon = require "gulp-nodemon"
 log         = require "id-debug"
 
-options       = idProjectOptions
-entryFilePath = options.nodemonEntryFilePath
-watchGlob     = options.watchGlob
+{
+	enabled
+	entryFilePath
+	watchGlob
+} = idProjectOptions.nodemon
 
 watchNodemon = ->
-	monitor = gulpNodemon
+	gulpNodemon
 		#verbose: true
 		script: entryFilePath
 		watch:  watchGlob
 
 gulp.task "nodemon:run", [ "compile" ], (cb) ->
-	unless options.nodemon is true
+	unless enabled is true
 		log.info "Skipping nodemon:run: Disabled."
 		return cb()
 
 	watchNodemon()
+
 	cb()
 
 	return

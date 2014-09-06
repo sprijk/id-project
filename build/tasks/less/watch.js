@@ -1,4 +1,4 @@
-var diskWatcher, entryFilePath, fs, gulp, gulpLess, gulpLivereload, log, options, path, targetDirectoryPath;
+var diskWatcher, enabled, entryFilePath, fs, gulp, gulpLess, gulpLivereload, log, path, targetDirectoryPath, watchEnabled, _ref;
 
 fs = require("fs");
 
@@ -14,51 +14,31 @@ log = require("id-debug");
 
 diskWatcher = require("../../lib/disk-watcher");
 
-options = idProjectOptions;
+_ref = idProjectOptions.less, enabled = _ref.enabled, entryFilePath = _ref.entryFilePath, targetDirectoryPath = _ref.targetDirectoryPath;
 
-entryFilePath = options.lessEntryFilePath;
-
-targetDirectoryPath = options.lessTargetDirectoryPath;
+watchEnabled = idProjectOptions.watch.enabled;
 
 gulp.task("less:watch", ["less:compile", "livereload:run"], function(cb) {
-  if (!(options.less === true && options.watch === true)) {
+  if (!(enabled === true && watchEnabled === true)) {
     log.info("Skipping less:watch: Disabled.");
     return cb();
   }
   fs.exists(entryFilePath, function(exists) {
-    var compilePath, removePath;
+    var compile;
     if (!exists) {
       log.info("Skipping less:compile: File `" + entryFilePath + "` not found.");
       return cb();
     }
-    compilePath = function(sourcePath) {
-      var sourceDirectory;
-      sourceDirectory = path.dirname(sourcePath);
-      return gulp.src(sourcePath).pipe(gulpLess()).pipe(gulp.dest(targetDirectoryPath)).pipe(gulpLivereload({
+    compile = function() {
+      return gulp.src(entryFilePath).pipe(gulpLess()).pipe(gulp.dest(targetDirectoryPath)).pipe(gulpLivereload({
         auto: false
       }));
-    };
-    removePath = function(sourcePath) {
-      var targetPath;
-      targetPath = sourcePath.replace("src", "build").replace(".less", ".css").replace("/less", "/css");
-      return fs.unlink(targetPath, function(error) {
-        if (error) {
-          return log.error(error);
-        }
-      });
     };
     return diskWatcher.src().on("change", function(options) {
       if (!options.path.match(/\.less/)) {
         return;
       }
-      switch (options.type) {
-        case "changed":
-          return compilePath(entryFilePath);
-        case "added":
-          return compilePath(entryFilePath);
-        case "deleted":
-          return removePath(options.path);
-      }
+      return compile();
     });
   });
 });

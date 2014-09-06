@@ -1,4 +1,4 @@
-var entryFilePath, fs, gulp, gulpLess, log, options, targetDirectoryPath;
+var enabled, entryFilePath, fs, gulp, gulpLess, log, targetDirectoryPath, _ref;
 
 fs = require("fs");
 
@@ -8,14 +8,10 @@ gulpLess = require("gulp-less");
 
 log = require("id-debug");
 
-options = idProjectOptions;
-
-entryFilePath = options.lessEntryFilePath;
-
-targetDirectoryPath = options.lessTargetDirectoryPath;
+_ref = idProjectOptions.less, enabled = _ref.enabled, entryFilePath = _ref.entryFilePath, targetDirectoryPath = _ref.targetDirectoryPath;
 
 gulp.task("less:compile", function(cb) {
-  if (options.less !== true) {
+  if (enabled !== true) {
     log.info("Skipping less:compile: Disabled.");
     return cb();
   }
@@ -24,6 +20,6 @@ gulp.task("less:compile", function(cb) {
       log.info("Skipping less:compile: File `" + entryFilePath + "` not found.");
       return cb();
     }
-    return gulp.src(entryFilePath).pipe(gulpLess()).pipe(gulp.dest(lessTargetDirectoryPath)).on("end", cb);
+    return gulp.src(entryFilePath).pipe(gulpLess()).pipe(gulp.dest(targetDirectoryPath)).on("end", cb);
   });
 });

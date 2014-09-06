@@ -8,12 +8,16 @@ log            = require "id-debug"
 
 diskWatcher = require "../../lib/disk-watcher"
 
-options             = idProjectOptions
-entryFilePath       = options.lessEntryFilePath
-targetDirectoryPath = options.lessTargetDirectoryPath
+{
+	enabled
+	entryFilePath
+	targetDirectoryPath
+} = idProjectOptions.less
+
+watchEnabled = idProjectOptions.watch.enabled
 
 gulp.task "less:watch", [ "less:compile", "livereload:run" ], (cb) ->
-	unless options.less is true and options.watch is true
+	unless enabled is true and watchEnabled is true
 		log.info "Skipping less:watch: Disabled."
 		return cb()
 
@@ -22,34 +26,16 @@ gulp.task "less:watch", [ "less:compile", "livereload:run" ], (cb) ->
 			log.info "Skipping less:compile: File `#{entryFilePath}` not found."
 			return cb()
 
-		compilePath = (sourcePath) ->
-			sourceDirectory = path.dirname sourcePath
-
-			gulp.src sourcePath
+		compile = ->
+			gulp.src entryFilePath
 				.pipe gulpLess()
 				.pipe gulp.dest targetDirectoryPath
 				.pipe gulpLivereload auto: false
 
-		removePath = (sourcePath) ->
-			targetPath = sourcePath
-				.replace "src",   "build"
-				.replace ".less", ".css"
-				.replace "/less", "/css"
-
-			fs.unlink targetPath, (error) ->
-				log.error error if error
-
 		diskWatcher.src().on "change", (options) ->
 			return unless options.path.match /\.less/
 
-			switch options.type
-				when "changed"
-					compilePath entryFilePath
-
-				when "added"
-					compilePath entryFilePath
-
-				when "deleted"
-					removePath options.path
+			# Compile in all cases (changed, added, deleted).
+			compile()
 
 	return

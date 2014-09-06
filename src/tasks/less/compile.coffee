@@ -4,12 +4,14 @@ gulp     = require "gulp"
 gulpLess = require "gulp-less"
 log      = require "id-debug"
 
-options             = idProjectOptions
-entryFilePath       = options.lessEntryFilePath
-targetDirectoryPath = options.lessTargetDirectoryPath
+{
+	enabled
+	entryFilePath
+	targetDirectoryPath
+} = idProjectOptions.less
 
 gulp.task "less:compile", (cb) ->
-	unless options.less is true
+	unless enabled is true
 		log.info "Skipping less:compile: Disabled."
 		return cb()
 
@@ -20,7 +22,7 @@ gulp.task "less:compile", (cb) ->
 
 		gulp.src entryFilePath
 			.pipe gulpLess()
-			.pipe gulp.dest lessTargetDirectoryPath
+			.pipe gulp.dest targetDirectoryPath
 			.on "end", cb
 
 	return

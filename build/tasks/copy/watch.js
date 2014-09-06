@@ -1,4 +1,4 @@
-var copy, diskWatcher, fs, gulp, gulpLivereload, log, options, reloadPath, rm, _ref;
+var copy, diskWatcher, enabled, fs, gulp, gulpLivereload, log, reloadPath, rm, watchEnabled, _ref;
 
 fs = require("fs");
 
@@ -12,7 +12,9 @@ diskWatcher = require("../../lib/disk-watcher");
 
 _ref = require("../../lib/files"), copy = _ref.copy, rm = _ref.rm;
 
-options = idProjectOptions;
+enabled = idProjectOptions.copy.enabled;
+
+watchEnabled = idProjectOptions.watch.enabled;
 
 reloadPath = function(path) {
   if (path.match(/\.jade$/)) {
@@ -26,7 +28,7 @@ reloadPath = function(path) {
 };
 
 gulp.task("copy:watch", ["copy:compile", "livereload:run"], function(cb) {
-  if (!(options.copy === true && options.watch === true)) {
+  if (!(enabled === true && watchEnabled === true)) {
     log.info("Skipping copy:watch: Disabled.");
     return cb();
   }

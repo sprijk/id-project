@@ -1,10 +1,12 @@
 gulp = require "gulp"
 log  = require "id-debug"
 
-options = idProjectOptions
+{
+	enabled
+} = idProjectOptions.copy
 
 gulp.task "copy:compile", (cb) ->
-	unless options.copy is true
+	unless enabled is true
 		log.info "Skipping copy:compile: Disabled."
 		return cb()
 

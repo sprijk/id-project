@@ -7,13 +7,17 @@ log            = require "id-debug"
 vinylSource    = require "vinyl-source-stream"
 watchify       = require "watchify"
 
-options             = idProjectOptions
-entryFilePath       = options.browserifyEntryFilePath
-targetFilename      = options.browserifyTargetFilename
-targetDirectoryPath = options.browserifyTargetDirectoryPath
+{
+	enabled
+	entryFilePath
+	targetFilename
+	targetDirectoryPath
+} = idProjectOptions.browserify
+
+watchEnabled = idProjectOptions.watch.enabled
 
 gulp.task "browserify:watch", [ "browserify:compile", "livereload:run" ], (cb) ->
-	unless options.browserify is true and options.watch is true
+	unless enabled is true and watchEnabled is true
 		log.info "Skipping browserify:watch: Disabled."
 		return cb()
 

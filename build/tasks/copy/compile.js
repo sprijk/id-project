@@ -1,13 +1,13 @@
-var gulp, log, options;
+var enabled, gulp, log;
 
 gulp = require("gulp");
 
 log = require("id-debug");
 
-options = idProjectOptions;
+enabled = idProjectOptions.copy.enabled;
 
 gulp.task("copy:compile", function(cb) {
-  if (options.copy !== true) {
+  if (enabled !== true) {
     log.info("Skipping copy:compile: Disabled.");
     return cb();
   }
