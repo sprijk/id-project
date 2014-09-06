@@ -1,4 +1,4 @@
-var enabled, gulp, gulpCoffee, log;
+var enabled, gulp, gulpCoffee, log, sourceDirectoryPath, targetDirectoryPath, _ref;
 
 gulp = require("gulp");
 
@@ -6,7 +6,7 @@ gulpCoffee = require("gulp-coffee");
 
 log = require("id-debug");
 
-enabled = idProjectOptions.coffee.enabled;
+_ref = idProjectOptions.coffee, enabled = _ref.enabled, sourceDirectoryPath = _ref.sourceDirectoryPath, targetDirectoryPath = _ref.targetDirectoryPath;
 
 gulp.task("coffee:compile", function(cb) {
   var coffeeCompiler;
@@ -18,5 +18,5 @@ gulp.task("coffee:compile", function(cb) {
     bare: true
   });
   coffeeCompiler.on("error", log.error.bind(log));
-  gulp.src("src/**/*.coffee").pipe(coffeeCompiler).pipe(gulp.dest("build")).on("end", cb);
+  gulp.src("" + sourceDirectoryPath + "/**/*.coffee").pipe(coffeeCompiler).pipe(gulp.dest(targetDirectoryPath)).on("end", cb);
 });

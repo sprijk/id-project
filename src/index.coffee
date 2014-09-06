@@ -17,6 +17,8 @@ defaults.clean =
 
 defaults.coffee =
 	enabled: true
+	sourceDirectoryPath: defaults.sourceDirectoryPath
+	targetDirectoryPath: defaults.targetDirectoryPath
 
 defaults.copy =
 	enabled: true
