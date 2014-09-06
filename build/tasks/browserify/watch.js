@@ -1,4 +1,4 @@
-var entryFilePath, fs, gulp, gulpLivereload, log, options, path, targetDirectory, vinylSource, watchify;
+var entryFilePath, fs, gulp, gulpLivereload, log, options, path, targetDirectoryPath, targetFilename, vinylSource, watchify;
 
 fs = require("fs");
 
@@ -14,11 +14,13 @@ vinylSource = require("vinyl-source-stream");
 
 watchify = require("watchify");
 
-entryFilePath = "./build/client/js/app/index.js";
-
-targetDirectory = "./build/client/js/app";
-
 options = idProjectOptions;
+
+entryFilePath = options.browserifyEntryFilePath;
+
+targetFilename = options.browserifyTargetFilename;
+
+targetDirectoryPath = options.browserifyTargetDirectoryPath;
 
 gulp.task("browserify:watch", ["browserify:compile", "livereload:run"], function(cb) {
   if (!(options.browserify === true && options.watch === true)) {
@@ -43,7 +45,7 @@ gulp.task("browserify:watch", ["browserify:compile", "livereload:run"], function
         debug: true
       });
       bundle.on("error", log.error.bind(log));
-      return bundle.pipe(vinylSource("app.bundle.js")).pipe(gulp.dest(targetDirectory)).pipe(gulpLivereload({
+      return bundle.pipe(vinylSource(targetFilename)).pipe(gulp.dest(targetDirectoryPath)).pipe(gulpLivereload({
         auto: false
       }));
     };

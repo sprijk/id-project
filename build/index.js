@@ -1,19 +1,27 @@
 var defaultOptions, log, lsr;
 
-log = require('id-debug');
+log = require("id-debug");
 
-lsr = require('lsr');
+lsr = require("lsr");
 
 defaultOptions = {
   browserify: true,
+  browserifyEntryFilePath: "./build/client/js/app/app.js",
+  browserifyTargetFilename: "app.bundle.js",
+  browserifyTargetDirectoryPath: "./build/client/js/app",
   clean: true,
   coffee: true,
   copy: true,
   documentation: true,
   less: true,
+  lessEntryFilePath: "./src/client/less/app.less",
+  lessTargetDirectoryPath: "./build/client/css",
   livereload: true,
   nodemon: true,
+  nodemonEntryFilePath: "./app.js",
+  nodemonWatchGlob: ["build/server/**/*.js"],
   tests: true,
+  testsDirectoryPath: "./test",
   watch: true
 };
 
@@ -34,7 +42,7 @@ module.exports = function(options) {
   for (_i = 0, _len = stats.length; _i < _len; _i++) {
     stat = stats[_i];
     if (!stat.isDirectory()) {
-      log.debug('Requiring module', stat.fullPath);
+      log.debug("Requiring module", stat.fullPath);
       require(stat.fullPath);
     }
   }

@@ -1,4 +1,4 @@
-var changeHandler, diskWatcher, fs, gulp, log, options, path, runTests, tests;
+var changeHandler, directoryPath, diskWatcher, fs, gulp, log, options, path, runTests, tests;
 
 fs = require("fs");
 
@@ -14,8 +14,10 @@ tests = require("../../lib/tests");
 
 options = idProjectOptions;
 
+directoryPath = options.testsDirectoryPath;
+
 runTests = function() {
-  return tests(false, "progress", function() {});
+  return tests(directoryPath, false, "progress", function() {});
 };
 
 changeHandler = function(options) {

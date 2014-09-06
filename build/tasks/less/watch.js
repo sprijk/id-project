@@ -1,4 +1,4 @@
-var diskWatcher, entryFilePath, fs, gulp, gulpLess, gulpLivereload, log, options, path;
+var diskWatcher, entryFilePath, fs, gulp, gulpLess, gulpLivereload, log, options, path, targetDirectoryPath;
 
 fs = require("fs");
 
@@ -14,9 +14,11 @@ log = require("id-debug");
 
 diskWatcher = require("../../lib/disk-watcher");
 
-entryFilePath = "src/client/less/app.less";
-
 options = idProjectOptions;
+
+entryFilePath = options.lessEntryFilePath;
+
+targetDirectoryPath = options.lessTargetDirectoryPath;
 
 gulp.task("less:watch", ["less:compile", "livereload:run"], function(cb) {
   if (!(options.less === true && options.watch === true)) {
@@ -30,10 +32,9 @@ gulp.task("less:watch", ["less:compile", "livereload:run"], function(cb) {
       return cb();
     }
     compilePath = function(sourcePath) {
-      var buildDirectory, sourceDirectory;
+      var sourceDirectory;
       sourceDirectory = path.dirname(sourcePath);
-      buildDirectory = sourceDirectory.replace("src", "build").replace(".less", ".css").replace("/less", "/css");
-      return gulp.src(sourcePath).pipe(gulpLess()).pipe(gulp.dest(buildDirectory)).pipe(gulpLivereload({
+      return gulp.src(sourcePath).pipe(gulpLess()).pipe(gulp.dest(targetDirectoryPath)).pipe(gulpLivereload({
         auto: false
       }));
     };
@@ -52,9 +53,9 @@ gulp.task("less:watch", ["less:compile", "livereload:run"], function(cb) {
       }
       switch (options.type) {
         case "changed":
-          return compilePath("./src/client/less/app.less");
+          return compilePath(entryFilePath);
         case "added":
-          return compilePath("./src/client/less/app.less");
+          return compilePath(entryFilePath);
         case "deleted":
           return removePath(options.path);
       }
