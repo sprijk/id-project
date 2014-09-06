@@ -1,12 +1,22 @@
-var enabled, gulp, gulpCoffee, log, sourceDirectoryPath, targetDirectoryPath, _ref;
+var enabled, gulp, gulpCoffee, gulpTap, log, options, path, sourceDirectoryPath, targetDirectoryPath;
+
+path = require("path");
 
 gulp = require("gulp");
 
 gulpCoffee = require("gulp-coffee");
 
+gulpTap = require("gulp-tap");
+
 log = require("id-debug");
 
-_ref = idProjectOptions.coffee, enabled = _ref.enabled, sourceDirectoryPath = _ref.sourceDirectoryPath, targetDirectoryPath = _ref.targetDirectoryPath;
+options = idProjectOptions.coffee;
+
+enabled = options.enabled;
+
+sourceDirectoryPath = path.resolve(options.sourceDirectoryPath);
+
+targetDirectoryPath = path.resolve(options.targetDirectoryPath);
 
 gulp.task("coffee:compile", function(cb) {
   var coffeeCompiler;
@@ -18,5 +28,8 @@ gulp.task("coffee:compile", function(cb) {
     bare: true
   });
   coffeeCompiler.on("error", log.error.bind(log));
-  gulp.src("" + sourceDirectoryPath + "/**/*.coffee").pipe(coffeeCompiler).pipe(gulp.dest(targetDirectoryPath)).on("end", cb);
+  log.debug("coffee:compile: Looking for `" + sourceDirectoryPath + "/**/*.coffee`.");
+  gulp.src("" + sourceDirectoryPath + "/**/*.coffee").pipe(gulpTap(function(file) {
+    log.debug("coffee:compile: Compiling `" + file.path + "` into `" + targetDirectoryPath + "`.");
+  })).pipe(coffeeCompiler).pipe(gulp.dest(targetDirectoryPath)).on("end", cb);
 });

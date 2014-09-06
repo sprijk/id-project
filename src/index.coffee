@@ -49,6 +49,8 @@ defaults.watch =
 	enabled: true
 
 applyDefaults = (options) ->
+	#log.debug "options before", options
+
 	for task, taskOptions of defaults
 		for k, v of taskOptions
 			unless options[task]?
@@ -56,6 +58,8 @@ applyDefaults = (options) ->
 
 			unless options[task][k]?
 				options[task][k] = v
+
+	#log.debug "options after", options
 
 module.exports = (options = {}) ->
 	tasksDirectoryPath = "#{__dirname}/tasks"

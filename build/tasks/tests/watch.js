@@ -1,4 +1,4 @@
-var changeHandler, directoryPath, diskWatcher, enabled, fs, gulp, log, path, runTests, tests, watchEnabled, _ref;
+var changeHandler, directoryPath, diskWatcher, enabled, fs, gulp, log, options, path, runTests, tests, watchEnabled;
 
 fs = require("fs");
 
@@ -12,7 +12,11 @@ diskWatcher = require("../../lib/disk-watcher");
 
 tests = require("../../lib/tests");
 
-_ref = idProjectOptions.tests, enabled = _ref.enabled, directoryPath = _ref.directoryPath;
+options = idProjectOptions.tests;
+
+enabled = options.enabled;
+
+directoryPath = path.resolve(options.directoryPath);
 
 watchEnabled = idProjectOptions.watch.enabled;
 

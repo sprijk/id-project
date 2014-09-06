@@ -1,4 +1,4 @@
-var enabled, entryFilePath, fs, gulp, gulpNodemon, log, path, watchGlob, watchNodemon, _ref;
+var enabled, entryFilePath, fs, gulp, gulpNodemon, log, options, path, watchGlob, watchNodemon;
 
 fs = require("fs");
 
@@ -10,7 +10,13 @@ gulpNodemon = require("gulp-nodemon");
 
 log = require("id-debug");
 
-_ref = idProjectOptions.nodemon, enabled = _ref.enabled, entryFilePath = _ref.entryFilePath, watchGlob = _ref.watchGlob;
+options = idProjectOptions.less;
+
+enabled = options.enabled;
+
+entryFilePath = path.resolve(options.entryFilePath);
+
+watchGlob = options.watchGlob;
 
 watchNodemon = function() {
   return gulpNodemon({

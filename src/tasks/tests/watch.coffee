@@ -7,12 +7,10 @@ log  = require "id-debug"
 diskWatcher = require "../../lib/disk-watcher"
 tests       = require "../../lib/tests"
 
-{
-	enabled
-	directoryPath
-} = idProjectOptions.tests
-
-watchEnabled = idProjectOptions.watch.enabled
+options       = idProjectOptions.tests
+enabled       = options.enabled
+directoryPath = path.resolve options.directoryPath
+watchEnabled  = idProjectOptions.watch.enabled
 
 runTests = ->
 	tests directoryPath, false, "progress", ->

@@ -1,14 +1,18 @@
-var directoryPath, enabled, gulp, log, options, tests, _ref;
+var directoryPath, enabled, gulp, log, options, path, tests;
 
 gulp = require("gulp");
 
 log = require("id-debug");
 
+path = require("path");
+
 tests = require("../../lib/tests");
 
-options = idProjectOptions;
+options = idProjectOptions.tests;
 
-_ref = idProjectOptions.less, enabled = _ref.enabled, directoryPath = _ref.directoryPath;
+enabled = options.enabled;
+
+directoryPath = path.resolve(options.directoryPath);
 
 gulp.task("tests:run", ["compile"], function(cb) {
   if (enabled !== true) {
