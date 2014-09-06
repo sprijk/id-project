@@ -1,4 +1,4 @@
-var diskWatcher, enabled, fs, gulp, gulpCoffee, gulpLivereload, log, path, watchEnabled;
+var diskWatcher, enabled, fs, gulp, gulpCoffee, gulpLivereload, log, path, sourceDirectoryPath, targetDirectoryPath, watchEnabled, _ref;
 
 fs = require("fs");
 
@@ -14,7 +14,7 @@ log = require("id-debug");
 
 diskWatcher = require("../../lib/disk-watcher");
 
-enabled = idProjectOptions.coffee.enabled;
+_ref = idProjectOptions.coffee, enabled = _ref.enabled, sourceDirectoryPath = _ref.sourceDirectoryPath, targetDirectoryPath = _ref.targetDirectoryPath;
 
 watchEnabled = idProjectOptions.watch.enabled;
 
@@ -25,18 +25,18 @@ gulp.task("coffee:watch", ["coffee:compile", "livereload:run"], function(cb) {
     return cb();
   }
   compilePath = function(sourcePath) {
-    var buildDirectory, coffeeCompiler, sourceDirectory;
+    var coffeeCompiler, sourceDirectory, targetDirectory;
     coffeeCompiler = gulpCoffee({
       bare: true
     });
     coffeeCompiler.on("error", log.error.bind(log));
     sourceDirectory = path.dirname(sourcePath);
-    buildDirectory = sourceDirectory.replace("src", "build");
-    return gulp.src(sourcePath).pipe(coffeeCompiler).pipe(gulp.dest(buildDirectory));
+    targetDirectory = sourceDirectory.replace(sourceDirectoryPath, targetDirectoryPath);
+    return gulp.src(sourcePath).pipe(coffeeCompiler).pipe(gulp.dest(targetDirectory));
   };
   removePath = function(sourcePath) {
     var targetPath;
-    targetPath = sourcePath.replace("src", "build").replace(".coffee", ".js");
+    targetPath = sourcePath.replace(sourceDirectoryPath, targetDirectoryPath).replace(".coffee", ".js");
     return fs.unlink(targetPath, function(error) {
       if (error) {
         return log.error(error);
