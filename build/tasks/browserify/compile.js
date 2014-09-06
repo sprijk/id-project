@@ -1,4 +1,4 @@
-var Transform, browserify, entryFilePath, fs, gulp, log, options, targetDirectory, vinylSource;
+var Transform, browserify, entryFilePath, fs, gulp, log, options, targetDirectoryPath, targetFilename, vinylSource;
 
 fs = require("fs");
 
@@ -12,11 +12,13 @@ vinylSource = require("vinyl-source-stream");
 
 Transform = require("stream").Transform;
 
-entryFilePath = "./build/client/js/app/index.js";
-
-targetDirectory = "./build/client/js/app";
-
 options = idProjectOptions;
+
+entryFilePath = options.browserifyEntryFilePath;
+
+targetFilename = options.browserifyTargetFilename;
+
+targetDirectoryPath = options.browserifyTargetDirectoryPath;
 
 gulp.task("browserify:compile", ["coffee:compile", "copy:compile"], function(cb) {
   if (options.browserify !== true) {
@@ -39,6 +41,6 @@ gulp.task("browserify:compile", ["coffee:compile", "copy:compile"], function(cb)
       debug: true
     });
     bundle.on("error", log.error.bind(log));
-    bundle.pipe(vinylSource("app.bundle.js")).pipe(gulp.dest(targetDirectory)).on("end", cb);
+    bundle.pipe(vinylSource(targetFilename)).pipe(gulp.dest(targetDirectoryPath)).on("end", cb);
   });
 });

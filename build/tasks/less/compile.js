@@ -1,4 +1,4 @@
-var entryFilePath, fs, gulp, gulpLess, log, options;
+var entryFilePath, fs, gulp, gulpLess, log, options, targetDirectoryPath;
 
 fs = require("fs");
 
@@ -8,9 +8,11 @@ gulpLess = require("gulp-less");
 
 log = require("id-debug");
 
-entryFilePath = "src/client/less/app.less";
-
 options = idProjectOptions;
+
+entryFilePath = options.lessEntryFilePath;
+
+targetDirectoryPath = options.lessTargetDirectoryPath;
 
 gulp.task("less:compile", function(cb) {
   if (options.less !== true) {
@@ -22,6 +24,6 @@ gulp.task("less:compile", function(cb) {
       log.info("Skipping less:compile: File `" + entryFilePath + "` not found.");
       return cb();
     }
-    return gulp.src(entryFilePath).pipe(gulpLess()).pipe(gulp.dest("build/client/css")).on("end", cb);
+    return gulp.src(entryFilePath).pipe(gulpLess()).pipe(gulp.dest(lessTargetDirectoryPath)).on("end", cb);
   });
 });

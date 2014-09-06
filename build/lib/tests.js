@@ -1,4 +1,4 @@
-var cp, fs, log, path, pathToMocha, pathToTestsDirectory, tests;
+var cp, fs, log, path, pathToMocha, tests;
 
 fs = require("fs");
 
@@ -10,10 +10,8 @@ log = require("id-debug");
 
 pathToMocha = path.resolve("" + __dirname + "/../../node_modules/.bin/mocha");
 
-pathToTestsDirectory = path.resolve("" + __dirname + "/../../test");
-
-tests = function(exit, reporter, cb) {
-  return fs.exists(pathToTestsDirectory, function(exists) {
+tests = function(directory, exit, reporter, cb) {
+  return fs.exists(directory, function(exists) {
     var childProcess;
     if (!exists) {
       log.info("Skipping mocha: Directory `" + pathToTestsDirectory + "` not found.");

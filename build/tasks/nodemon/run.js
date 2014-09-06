@@ -1,4 +1,4 @@
-var fs, gulp, gulpNodemon, log, options, path, watchNodemon;
+var entryFilePath, fs, gulp, gulpNodemon, log, options, path, watchGlob, watchNodemon;
 
 fs = require("fs");
 
@@ -12,11 +12,15 @@ log = require("id-debug");
 
 options = idProjectOptions;
 
+entryFilePath = options.nodemonEntryFilePath;
+
+watchGlob = options.watchGlob;
+
 watchNodemon = function() {
   var monitor;
   return monitor = gulpNodemon({
-    script: "app.js",
-    watch: ["build/server/**/*.js"]
+    script: entryFilePath,
+    watch: watchGlob
   });
 };
 
