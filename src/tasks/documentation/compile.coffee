@@ -3,9 +3,8 @@ log  = require "id-debug"
 
 docs = require "../../lib/docs"
 
-{
-	enabled
-} = idProjectOptions.documentation
+options = idProjectOptions.documentation
+enabled = options.enabled
 
 gulp.task "documentation:compile", (cb) ->
 	unless enabled is true

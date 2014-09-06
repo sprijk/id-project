@@ -1,4 +1,4 @@
-var docs, enabled, gulp, log;
+var docs, enabled, gulp, log, options;
 
 gulp = require("gulp");
 
@@ -6,7 +6,9 @@ log = require("id-debug");
 
 docs = require("../../lib/docs");
 
-enabled = idProjectOptions.documentation.enabled;
+options = idProjectOptions.documentation;
+
+enabled = options.enabled;
 
 gulp.task("documentation:compile", function(cb) {
   if (enabled !== true) {

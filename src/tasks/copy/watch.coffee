@@ -7,10 +7,8 @@ log            = require "id-debug"
 diskWatcher  = require "../../lib/disk-watcher"
 { copy, rm } = require "../../lib/files"
 
-{
-	enabled
-} = idProjectOptions.copy
-
+options      = idProjectOptions.copy
+enabled      = options.enabled
 watchEnabled = idProjectOptions.watch.enabled
 
 reloadPath = (path) ->

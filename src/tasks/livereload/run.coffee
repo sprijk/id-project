@@ -4,9 +4,8 @@ gulp           = require "gulp"
 gulpLivereload = require "gulp-livereload"
 log            = require "id-debug"
 
-{
-	enabled
-} = idProjectOptions.livereload
+options = idProjectOptions.livereload
+enabled = options.enabled
 
 gulp.task "livereload:run", (cb) ->
 	unless enabled is true

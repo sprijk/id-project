@@ -1,17 +1,18 @@
-fs = require "fs"
+fs   = require "fs"
+path = require "path"
 
 browserify    = require "browserify"
 gulp          = require "gulp"
+gulpTap       = require "gulp-tap"
 log           = require "id-debug"
 vinylSource   = require "vinyl-source-stream"
 { Transform } = require "stream"
 
-{
-	enabled
-	entryFilePath
-	targetFilename
-	targetDirectoryPath
-} = idProjectOptions.browserify
+options             = idProjectOptions.browserify
+enabled             = options.enabled
+entryFilePath       = path.resolve options.entryFilePath
+targetDirectoryPath = path.resolve options.targetDirectoryPath
+targetFilename      = options.targetFilename
 
 gulp.task "browserify:compile", [ "coffee:compile", "copy:compile" ], (cb) ->
 	unless enabled is true
@@ -36,6 +37,10 @@ gulp.task "browserify:compile", [ "coffee:compile", "copy:compile" ], (cb) ->
 
 		bundle
 			.pipe vinylSource targetFilename
+			.pipe gulpTap (file) ->
+				log.debug "browserify:compile: Compiling `#{file.path}` into `#{targetDirectoryPath}`."
+				return
+
 			.pipe gulp.dest targetDirectoryPath
 			.on "end", cb
 
