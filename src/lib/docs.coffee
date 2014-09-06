@@ -1,7 +1,7 @@
 cp = require "child_process"
 
 docs = (exit, cb) ->
-	childProcess = cp.spawn "#{__dirname}/../../../node_modules/.bin/codo", [
+	childProcess = cp.spawn "#{__dirname}/../../node_modules/.bin/codo", [
 		"--output"
 		"docs"
 		"--undocumented"

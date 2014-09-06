@@ -1,4 +1,4 @@
-var docs, gulp, log, options;
+var docs, enabled, gulp, log;
 
 gulp = require("gulp");
 
@@ -6,10 +6,10 @@ log = require("id-debug");
 
 docs = require("../../lib/docs");
 
-options = idProjectOptions;
+enabled = idProjectOptions.documentation.enabled;
 
 gulp.task("documentation:compile", function(cb) {
-  if (options.documentation !== true) {
+  if (enabled !== true) {
     log.info("Skipping documentation:compile: Disabled.");
     return cb();
   }

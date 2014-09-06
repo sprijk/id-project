@@ -1,4 +1,4 @@
-var gulp, gulpCoffee, log, options;
+var enabled, gulp, gulpCoffee, log;
 
 gulp = require("gulp");
 
@@ -6,11 +6,11 @@ gulpCoffee = require("gulp-coffee");
 
 log = require("id-debug");
 
-options = idProjectOptions;
+enabled = idProjectOptions.coffee.enabled;
 
 gulp.task("coffee:compile", function(cb) {
   var coffeeCompiler;
-  if (options.coffee !== true) {
+  if (enabled !== true) {
     log.info("Skipping coffee:compile: Disabled.");
     return cb();
   }

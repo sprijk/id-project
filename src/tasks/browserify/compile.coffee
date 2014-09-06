@@ -6,13 +6,15 @@ log           = require "id-debug"
 vinylSource   = require "vinyl-source-stream"
 { Transform } = require "stream"
 
-options             = idProjectOptions
-entryFilePath       = options.browserifyEntryFilePath
-targetFilename      = options.browserifyTargetFilename
-targetDirectoryPath = options.browserifyTargetDirectoryPath
+{
+	enabled
+	entryFilePath
+	targetFilename
+	targetDirectoryPath
+} = idProjectOptions.browserify
 
 gulp.task "browserify:compile", [ "coffee:compile", "copy:compile" ], (cb) ->
-	unless options.browserify is true
+	unless enabled is true
 		log.info "Skipping browserify:compile: Disabled."
 		return cb()
 

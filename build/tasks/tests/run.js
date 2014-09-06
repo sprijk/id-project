@@ -1,4 +1,4 @@
-var gulp, log, options, tests;
+var directoryPath, enabled, gulp, log, options, tests, _ref;
 
 gulp = require("gulp");
 
@@ -8,10 +8,12 @@ tests = require("../../lib/tests");
 
 options = idProjectOptions;
 
+_ref = idProjectOptions.less, enabled = _ref.enabled, directoryPath = _ref.directoryPath;
+
 gulp.task("tests:run", ["compile"], function(cb) {
-  if (options.tests !== true) {
+  if (enabled !== true) {
     log.info("Skipping tests:run: Disabled.");
     return cb();
   }
-  tests(true, "spec", cb);
+  tests(directoryPath, true, "spec", cb);
 });

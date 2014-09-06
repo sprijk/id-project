@@ -1,4 +1,4 @@
-var Transform, browserify, entryFilePath, fs, gulp, log, options, targetDirectoryPath, targetFilename, vinylSource;
+var Transform, browserify, enabled, entryFilePath, fs, gulp, log, targetDirectoryPath, targetFilename, vinylSource, _ref;
 
 fs = require("fs");
 
@@ -12,16 +12,10 @@ vinylSource = require("vinyl-source-stream");
 
 Transform = require("stream").Transform;
 
-options = idProjectOptions;
-
-entryFilePath = options.browserifyEntryFilePath;
-
-targetFilename = options.browserifyTargetFilename;
-
-targetDirectoryPath = options.browserifyTargetDirectoryPath;
+_ref = idProjectOptions.browserify, enabled = _ref.enabled, entryFilePath = _ref.entryFilePath, targetFilename = _ref.targetFilename, targetDirectoryPath = _ref.targetDirectoryPath;
 
 gulp.task("browserify:compile", ["coffee:compile", "copy:compile"], function(cb) {
-  if (options.browserify !== true) {
+  if (enabled !== true) {
     log.info("Skipping browserify:compile: Disabled.");
     return cb();
   }

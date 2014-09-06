@@ -7,8 +7,12 @@ log  = require "id-debug"
 diskWatcher = require "../../lib/disk-watcher"
 tests       = require "../../lib/tests"
 
-options       = idProjectOptions
-directoryPath = options.testsDirectoryPath
+{
+	enabled
+	directoryPath
+} = idProjectOptions.tests
+
+watchEnabled = idProjectOptions.watch.enabled
 
 runTests = ->
 	tests directoryPath, false, "progress", ->
@@ -16,15 +20,11 @@ runTests = ->
 changeHandler = (options) ->
 	return unless options.path.match /\.coffee/
 
-	switch options.type
-		when "changed"
-			runTests()
-
-		when "added"
-			runTests()
+	# Run tests all cases (changed, added, deleted).
+	runTests()
 
 gulp.task "tests:watch", [ "compile" ], (cb) ->
-	unless options.tests is true and options.watch is true
+	unless enabled is true and watchEnabled is true
 		log.info "Skipping tests:watch: Disabled."
 		return cb()
 

@@ -7,7 +7,11 @@ log            = require "id-debug"
 diskWatcher  = require "../../lib/disk-watcher"
 { copy, rm } = require "../../lib/files"
 
-options = idProjectOptions
+{
+	enabled
+} = idProjectOptions.copy
+
+watchEnabled = idProjectOptions.watch.enabled
 
 reloadPath = (path) ->
 	return if path.match /\.jade$/
@@ -17,7 +21,7 @@ reloadPath = (path) ->
 			path: path
 
 gulp.task "copy:watch", [ "copy:compile", "livereload:run" ], (cb) ->
-	unless options.copy is true and options.watch is true
+	unless enabled is true and watchEnabled is true
 		log.info "Skipping copy:watch: Disabled."
 		return cb()
 

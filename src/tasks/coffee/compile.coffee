@@ -2,10 +2,12 @@ gulp       = require "gulp"
 gulpCoffee = require "gulp-coffee"
 log        = require "id-debug"
 
-options = idProjectOptions
+{
+	enabled
+} = idProjectOptions.coffee
 
 gulp.task "coffee:compile", (cb) ->
-	unless options.coffee is true
+	unless enabled is true
 		log.info "Skipping coffee:compile: Disabled."
 		return cb()
 

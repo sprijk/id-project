@@ -1,4 +1,4 @@
-var entryFilePath, fs, gulp, gulpLivereload, log, options, path, targetDirectoryPath, targetFilename, vinylSource, watchify;
+var enabled, entryFilePath, fs, gulp, gulpLivereload, log, path, targetDirectoryPath, targetFilename, vinylSource, watchEnabled, watchify, _ref;
 
 fs = require("fs");
 
@@ -14,16 +14,12 @@ vinylSource = require("vinyl-source-stream");
 
 watchify = require("watchify");
 
-options = idProjectOptions;
+_ref = idProjectOptions.browserify, enabled = _ref.enabled, entryFilePath = _ref.entryFilePath, targetFilename = _ref.targetFilename, targetDirectoryPath = _ref.targetDirectoryPath;
 
-entryFilePath = options.browserifyEntryFilePath;
-
-targetFilename = options.browserifyTargetFilename;
-
-targetDirectoryPath = options.browserifyTargetDirectoryPath;
+watchEnabled = idProjectOptions.watch.enabled;
 
 gulp.task("browserify:watch", ["browserify:compile", "livereload:run"], function(cb) {
-  if (!(options.browserify === true && options.watch === true)) {
+  if (!(enabled === true && watchEnabled === true)) {
     log.info("Skipping browserify:watch: Disabled.");
     return cb();
   }
