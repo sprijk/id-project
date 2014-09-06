@@ -10,6 +10,8 @@ diskWatcher = require "../../lib/disk-watcher"
 
 {
 	enabled
+	sourceDirectoryPath
+	targetDirectoryPath
 } = idProjectOptions.coffee
 
 watchEnabled = idProjectOptions.watch.enabled
@@ -25,15 +27,15 @@ gulp.task "coffee:watch", [ "coffee:compile", "livereload:run" ], (cb) ->
 		coffeeCompiler.on "error", log.error.bind log
 
 		sourceDirectory = path.dirname sourcePath
-		buildDirectory  = sourceDirectory.replace "src", "build"
+		targetDirectory  = sourceDirectory.replace sourceDirectoryPath, targetDirectoryPath
 
 		gulp.src sourcePath
 			.pipe coffeeCompiler
-			.pipe gulp.dest buildDirectory
+			.pipe gulp.dest targetDirectory
 
 	removePath = (sourcePath) ->
 		targetPath = sourcePath
-			.replace "src",     "build"
+			.replace sourceDirectoryPath, targetDirectoryPath
 			.replace ".coffee", ".js"
 
 		fs.unlink targetPath, (error) ->
