@@ -2,11 +2,16 @@ A gulp based project structure and compilation automation.
 
 ## Installation
 
+Install the required dependencies to run id-project with NPM.
+
 ```bash
-$ npm install --save id-project gulp coffee-script
+$ npm install --save-dev id-project gulp coffee-script
 ```
 
 ## Usage
+
+Running id-projects should work with very little configuration. Right now the
+policy is to enable all options by default.
 
 1. Put a file named `gulpfile.coffee` in your project directory containing:
 
@@ -21,6 +26,7 @@ $ npm install --save id-project gulp coffee-script
    ```
 
 ### Default options
+
 ```coffee
 sourceDirectoryPath = "./src"
 targetDirectoryPath = "./build"
@@ -31,34 +37,43 @@ require "id-project"
 		entryFilePath:       "#{targetDirectoryPath}/client/js/app/app.js"
 		targetFilename:      "app.bundle.js"
 		targetDirectoryPath: "#{targetDirectoryPath}/client/js/app"
+		
 	clean:
 		enabled: true
 		targetDirectoryPath: targetDirectoryPath
+		
 	coffee:
 		enabled: true
 		sourceDirectoryPath: sourceDirectoryPath
 		targetDirectoryPath: targetDirectoryPath
+		
 	copy:
 		enabled: true
 		sourceDirectoryPath: sourceDirectoryPath
 		targetDirectoryPath: targetDirectoryPath
+		
 	documentation:
 		enabled: true
 		sourceDirectoryPath: sourceDirectoryPath
 		targetDirectoryPath: targetDirectoryPath
+		
 	less:
 		enabled: true
 		entryFilePath:       "#{sourceDirectoryPath}/client/less/app.less"
 		targetDirectoryPath: "#{targetDirectoryPath}/client/css"
+		
 	livereload:
 		enabled: true
+		
 	nodemon:
 		enabled: true
 		entryFilePath: "./app.js"
 		watchGlob:     [ "#{targetDirectoryPath}/server/**/*.js" ]
+		
 	tests:
 		enabled: true
 		directoryPath: "./test"
+		
 	watch:
 		enabled: true
 ```
