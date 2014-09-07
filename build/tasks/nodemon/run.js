@@ -10,7 +10,7 @@ gulpNodemon = require("gulp-nodemon");
 
 log = require("id-debug");
 
-options = idProjectOptions.less;
+options = idProjectOptions.nodemon;
 
 enabled = options.enabled;
 

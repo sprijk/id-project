@@ -5,7 +5,7 @@ gulp        = require "gulp"
 gulpNodemon = require "gulp-nodemon"
 log         = require "id-debug"
 
-options       = idProjectOptions.less
+options       = idProjectOptions.nodemon
 enabled       = options.enabled
 entryFilePath = path.resolve options.entryFilePath
 watchGlob     = options.watchGlob
