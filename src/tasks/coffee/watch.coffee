@@ -19,6 +19,9 @@ gulp.task "coffee:watch", [ "coffee:compile", "livereload:run" ], (cb) ->
 		log.info "Skipping browserify:watch: Disabled."
 		return cb()
 
+	log.debug "[coffee:watch] Source directory path: `#{sourceDirectoryPath}`."
+	log.debug "[coffee:watch] Target directory path: `#{targetDirectoryPath}`."
+
 	compilePath = (sourcePath) ->
 		coffeeCompiler = gulpCoffee bare: true
 
@@ -44,12 +47,18 @@ gulp.task "coffee:watch", [ "coffee:compile", "livereload:run" ], (cb) ->
 
 		switch options.type
 			when "changed"
+				log.debug "[coffee:watch] Compiling `#{options.path}`."
+
 				compilePath options.path
 
 			when "added"
+				log.debug "[coffee:watch] Compiling `#{options.path}`."
+
 				compilePath options.path
 
 			when "deleted"
+				log.debug "[coffee:watch] Removing `#{options.path}`."
+
 				removePath options.path
 
 	return

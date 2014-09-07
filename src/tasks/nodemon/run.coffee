@@ -21,6 +21,9 @@ gulp.task "nodemon:run", [ "compile" ], (cb) ->
 		log.info "Skipping nodemon:run: Disabled."
 		return cb()
 
+	log.debug "[nodemon:run] Entry file path: `#{entryFilePath}`."
+	log.debug "[nodemon:run] Watch Globs: `#{watchGlob.join ","}`."
+
 	watchNodemon()
 
 	cb()

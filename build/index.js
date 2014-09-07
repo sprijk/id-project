@@ -18,7 +18,8 @@ defaults.browserify = {
 };
 
 defaults.clean = {
-  enabled: true
+  enabled: true,
+  targetDirectoryPath: defaults.targetDirectoryPath
 };
 
 defaults.coffee = {
@@ -34,7 +35,9 @@ defaults.copy = {
 };
 
 defaults.documentation = {
-  enabled: true
+  enabled: true,
+  sourceDirectoryPath: defaults.sourceDirectoryPath,
+  targetDirectoryPath: defaults.targetDirectoryPath
 };
 
 defaults.less = {

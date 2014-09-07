@@ -19,5 +19,6 @@ gulp.task("tests:run", ["compile"], function(cb) {
     log.info("Skipping tests:run: Disabled.");
     return cb();
   }
+  log.debug("[tests:run] Directory path: `" + directoryPath + "`.");
   tests(directoryPath, true, "spec", cb);
 });

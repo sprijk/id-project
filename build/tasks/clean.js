@@ -1,4 +1,6 @@
-var cleanBuildDirectory, gulp, log, options;
+var cleanBuildDirectory, enabled, gulp, log, options, path, targetDirectoryPath;
+
+path = require("path");
 
 gulp = require("gulp");
 
@@ -6,12 +8,17 @@ log = require("id-debug");
 
 cleanBuildDirectory = require("../lib/clean").cleanBuildDirectory;
 
-options = idProjectOptions;
+options = idProjectOptions.clean;
+
+enabled = options.enabled;
+
+targetDirectoryPath = path.resolve(options.targetDirectoryPath);
 
 gulp.task("clean", function(cb) {
-  if (options.clean !== true) {
+  if (enabled !== true) {
     log.info("Skipping clean: Disabled.");
     return cb();
   }
-  cleanBuildDirectory("./build", cb);
+  log.debug("[clean] Cleaning `" + targetDirectoryPath + "`.");
+  cleanBuildDirectory(targetDirectoryPath, cb);
 });

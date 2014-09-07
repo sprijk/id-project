@@ -30,6 +30,8 @@ gulp.task("coffee:watch", ["coffee:compile", "livereload:run"], function(cb) {
     log.info("Skipping browserify:watch: Disabled.");
     return cb();
   }
+  log.debug("[coffee:watch] Source directory path: `" + sourceDirectoryPath + "`.");
+  log.debug("[coffee:watch] Target directory path: `" + targetDirectoryPath + "`.");
   compilePath = function(sourcePath) {
     var coffeeCompiler, sourceDirectory, targetDirectory;
     coffeeCompiler = gulpCoffee({
@@ -55,10 +57,13 @@ gulp.task("coffee:watch", ["coffee:compile", "livereload:run"], function(cb) {
     }
     switch (options.type) {
       case "changed":
+        log.debug("[coffee:watch] Compiling `" + options.path + "`.");
         return compilePath(options.path);
       case "added":
+        log.debug("[coffee:watch] Compiling `" + options.path + "`.");
         return compilePath(options.path);
       case "deleted":
+        log.debug("[coffee:watch] Removing `" + options.path + "`.");
         return removePath(options.path);
     }
   });

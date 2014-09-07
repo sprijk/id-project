@@ -13,6 +13,8 @@ gulp.task "tests:run", [ "compile" ], (cb) ->
 		log.info "Skipping tests:run: Disabled."
 		return cb()
 
+	log.debug "[tests:run] Directory path: `#{directoryPath}`."
+
 	tests directoryPath, true, "spec", cb
 
 	return

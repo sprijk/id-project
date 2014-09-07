@@ -36,6 +36,7 @@ gulp.task("tests:watch", ["compile"], function(cb) {
     log.info("Skipping tests:watch: Disabled.");
     return cb();
   }
+  log.debug("[tests:watch] Directory path: `" + directoryPath + "`.");
   diskWatcher.src().on("change", changeHandler);
   diskWatcher.test().on("change", changeHandler);
   runTests();

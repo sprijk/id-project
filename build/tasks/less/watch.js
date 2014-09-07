@@ -29,6 +29,8 @@ gulp.task("less:watch", ["less:compile", "livereload:run"], function(cb) {
     log.info("Skipping less:watch: Disabled.");
     return cb();
   }
+  log.debug("[less:watch] Entry file path: `" + entryFilePath + "`.");
+  log.debug("[less:watch] Target directory path: `" + targetDirectoryPath + "`.");
   fs.exists(entryFilePath, function(exists) {
     var compile;
     if (!exists) {
@@ -44,6 +46,7 @@ gulp.task("less:watch", ["less:compile", "livereload:run"], function(cb) {
       if (!options.path.match(/\.less/)) {
         return;
       }
+      log.debug("[less:watch] Compiling `" + file.path + "`.");
       return compile();
     });
   });

@@ -1,15 +1,19 @@
 fs   = require "fs"
+path = require "path"
 
 gulp           = require "gulp"
 gulpLivereload = require "gulp-livereload"
+gulpTap        = require "gulp-tap"
 log            = require "id-debug"
 
 diskWatcher  = require "../../lib/disk-watcher"
 { copy, rm } = require "../../lib/files"
 
-options      = idProjectOptions.copy
-enabled      = options.enabled
-watchEnabled = idProjectOptions.watch.enabled
+options             = idProjectOptions.copy
+enabled             = options.enabled
+sourceDirectoryPath = path.resolve options.sourceDirectoryPath
+targetDirectoryPath = path.resolve options.targetDirectoryPath
+watchEnabled        = idProjectOptions.watch.enabled
 
 reloadPath = (path) ->
 	return if path.match /\.jade$/
@@ -23,23 +27,32 @@ gulp.task "copy:watch", [ "copy:compile", "livereload:run" ], (cb) ->
 		log.info "Skipping copy:watch: Disabled."
 		return cb()
 
+	log.debug "[copy:watch] Source directory path: `#{sourceDirectoryPath}`."
+	log.debug "[copy:watch] Target directory path: `#{targetDirectoryPath}`."
+
 	diskWatcher.src().on "change", (options) ->
 		return if options.path.match /\.(coffee|less)/
 
 		switch options.type
 			when "changed"
+				log.debug "[copy:watch] Copying: `#{options.path}`."
+
 				copy options.path, (error) ->
 					log.error error if error
 
 					reloadPath options.path
 
 			when "added"
+				log.debug "[copy:watch] Copying: `#{options.path}`."
+
 				copy options.path, (error) ->
 					log.error error if error
 
 					reloadPath options.path
 
 			when "deleted"
+				log.debug "[copy:watch] Removing: `#{options.path}`."
+
 				rm options.path, (error) ->
 					log.error error if error
 

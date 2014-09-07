@@ -14,6 +14,7 @@ defaults.browserify =
 
 defaults.clean =
 	enabled: true
+	targetDirectoryPath: defaults.targetDirectoryPath
 
 defaults.coffee =
 	enabled: true
@@ -27,6 +28,8 @@ defaults.copy =
 
 defaults.documentation =
 	enabled: true
+	sourceDirectoryPath: defaults.sourceDirectoryPath
+	targetDirectoryPath: defaults.targetDirectoryPath
 
 defaults.less =
 	enabled: true

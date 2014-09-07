@@ -33,10 +33,13 @@ gulp.task("browserify:watch", ["browserify:compile", "livereload:run"], function
     log.info("Skipping browserify:watch: Disabled.");
     return cb();
   }
+  log.debug("[browserify:watch] Entry file: `" + entryFilePath + "`.");
+  log.debug("[browserify:watch] Target directory path: `" + targetDirectoryPath + "`.");
+  log.debug("[browserify:watch] Target filename: `" + targetFilename + "`.");
   fs.exists(entryFilePath, function(exists) {
     var bundler, compile;
     if (!exists) {
-      log.info("Skipping browserify:watch: File `" + entryFilePath + "` not found.");
+      log.info("[browserify:watch] Entry file `" + entryFilePath + "` not found.");
       return cb();
     }
     bundler = watchify({
@@ -47,13 +50,12 @@ gulp.task("browserify:watch", ["browserify:compile", "livereload:run"], function
     bundler.transform("debowerify");
     compile = function() {
       var bundle;
-      log.debug("browserify:watch: Compiling `" + entryFilePath + "`.");
       bundle = bundler.bundle({
         debug: true
       });
       bundle.on("error", log.error.bind(log));
       return bundle.pipe(vinylSource(targetFilename)).pipe(gulpTap(function(file) {
-        log.debug("browserify:compile: Compiling `" + file.path + "` into `" + targetDirectoryPath + "`.");
+        log.debug("[browserify:watch] Compiling `" + file.path + "`.");
       })).pipe(gulp.dest(targetDirectoryPath)).pipe(gulpLivereload({
         auto: false
       }));

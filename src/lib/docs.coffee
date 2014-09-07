@@ -1,12 +1,12 @@
 cp = require "child_process"
 
-docs = (exit, cb) ->
+docs = (sourcePath, targetPath, exit, cb) ->
 	childProcess = cp.spawn "#{__dirname}/../../node_modules/.bin/codo", [
 		"--output"
-		"docs"
+		targetPath
 		"--undocumented"
 		"--private"
-		"src"
+		sourcePath
 	]
 
 	childProcess.stdout.on "data", (chunk) ->

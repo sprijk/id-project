@@ -24,12 +24,14 @@ gulp.task("coffee:compile", function(cb) {
     log.info("Skipping coffee:compile: Disabled.");
     return cb();
   }
+  log.debug("[coffee:compile] Source directory path: `" + sourceDirectoryPath + "`.");
+  log.debug("[coffee:compile] Target directory path: `" + targetDirectoryPath + "`.");
   coffeeCompiler = gulpCoffee({
     bare: true
   });
   coffeeCompiler.on("error", log.error.bind(log));
   log.debug("coffee:compile: Looking for `" + sourceDirectoryPath + "/**/*.coffee`.");
   gulp.src("" + sourceDirectoryPath + "/**/*.coffee").pipe(gulpTap(function(file) {
-    log.debug("coffee:compile: Compiling `" + file.path + "` into `" + targetDirectoryPath + "`.");
+    log.debug("[coffee:compile] Compiling `" + file.path + "`.");
   })).pipe(coffeeCompiler).pipe(gulp.dest(targetDirectoryPath)).on("end", cb);
 });

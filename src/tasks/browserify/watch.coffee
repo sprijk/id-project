@@ -20,9 +20,13 @@ gulp.task "browserify:watch", [ "browserify:compile", "livereload:run" ], (cb) -
 		log.info "Skipping browserify:watch: Disabled."
 		return cb()
 
+	log.debug "[browserify:watch] Entry file: `#{entryFilePath}`."
+	log.debug "[browserify:watch] Target directory path: `#{targetDirectoryPath}`."
+	log.debug "[browserify:watch] Target filename: `#{targetFilename}`."
+
 	fs.exists entryFilePath, (exists) ->
 		unless exists
-			log.info "Skipping browserify:watch: File `#{entryFilePath}` not found."
+			log.info "[browserify:watch] Entry file `#{entryFilePath}` not found."
 			return cb()
 
 		bundler = watchify
@@ -33,8 +37,6 @@ gulp.task "browserify:watch", [ "browserify:compile", "livereload:run" ], (cb) -
 		bundler.transform "debowerify"
 
 		compile = ->
-			log.debug "browserify:watch: Compiling `#{entryFilePath}`."
-
 			bundle = bundler.bundle debug: true
 
 			bundle.on "error", log.error.bind log
@@ -43,7 +45,7 @@ gulp.task "browserify:watch", [ "browserify:compile", "livereload:run" ], (cb) -
 				.pipe vinylSource targetFilename
 
 				.pipe gulpTap (file) ->
-					log.debug "browserify:compile: Compiling `#{file.path}` into `#{targetDirectoryPath}`."
+					log.debug "[browserify:watch] Compiling `#{file.path}`."
 					return
 
 				.pipe gulp.dest targetDirectoryPath

@@ -28,13 +28,16 @@ targetFilename = options.targetFilename;
 
 gulp.task("browserify:compile", ["coffee:compile", "copy:compile"], function(cb) {
   if (enabled !== true) {
-    log.info("Skipping browserify:compile: Disabled.");
+    log.info("[browserify:compile] Disabled.");
     return cb();
   }
+  log.debug("[browserify:compile] Entry file: `" + entryFilePath + "`.");
+  log.debug("[browserify:compile] Target directory path: `" + targetDirectoryPath + "`.");
+  log.debug("[browserify:compile] Target filename: `" + targetFilename + "`.");
   fs.exists(entryFilePath, function(exists) {
     var bundle, bundler;
     if (!exists) {
-      log.info("Skipping browserify:compile: File `" + entryFilePath + "` not found.");
+      log.info("[browserify:compile] Entry file `" + entryFilePath + "` not found.");
       return cb();
     }
     bundler = browserify({
@@ -48,7 +51,7 @@ gulp.task("browserify:compile", ["coffee:compile", "copy:compile"], function(cb)
     });
     bundle.on("error", log.error.bind(log));
     bundle.pipe(vinylSource(targetFilename)).pipe(gulpTap(function(file) {
-      log.debug("browserify:compile: Compiling `" + file.path + "` into `" + targetDirectoryPath + "`.");
+      log.debug("[browserify:compile] Compiling `" + file.path + "`.");
     })).pipe(gulp.dest(targetDirectoryPath)).on("end", cb);
   });
 });
