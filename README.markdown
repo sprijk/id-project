@@ -22,25 +22,45 @@ $ npm install --save id-project gulp coffee-script
 
 ### Default options
 ```coffee
+sourceDirectoryPath = "./src"
+targetDirectoryPath = "./build"
+
 require "id-project"
-	browserify:                    true
-	browserifyEntryFilePath:       "./build/client/js/app/app.js"
-	browserifyTargetFilename:      "app.bundle.js"
-	browserifyTargetDirectoryPath: "./build/client/js/app"
-	clean:                         true
-	coffee:                        true
-	copy:                          true
-	documentation:                 true
-	less:                          true
-	lessEntryFilePath:             "./src/client/less/app.less"
-	lessTargetDirectoryPath:       "./build/client/css"
-	livereload:                    true
-	nodemon:                       true
-	nodemonEntryFilePath:          "./app.js"
-	nodemonWatchGlob:              [ "build/server/**/*.js" ]
-	tests:                         true
-	testsDirectoryPath:            "./test"
-	watch:                         true
+	browserify:
+		enabled: true
+		entryFilePath:       "#{targetDirectoryPath}/client/js/app/app.js"
+		targetFilename:      "app.bundle.js"
+		targetDirectoryPath: "#{targetDirectoryPath}/client/js/app"
+	clean:
+		enabled: true
+		targetDirectoryPath: targetDirectoryPath
+	coffee:
+		enabled: true
+		sourceDirectoryPath: sourceDirectoryPath
+		targetDirectoryPath: targetDirectoryPath
+	copy:
+		enabled: true
+		sourceDirectoryPath: sourceDirectoryPath
+		targetDirectoryPath: targetDirectoryPath
+	documentation:
+		enabled: true
+		sourceDirectoryPath: sourceDirectoryPath
+		targetDirectoryPath: targetDirectoryPath
+	less:
+		enabled: true
+		entryFilePath:       "#{sourceDirectoryPath}/client/less/app.less"
+		targetDirectoryPath: "#{targetDirectoryPath}/client/css"
+	livereload:
+		enabled: true
+	nodemon:
+		enabled: true
+		entryFilePath: "./app.js"
+		watchGlob:     [ "#{targetDirectoryPath}/server/**/*.js" ]
+	tests:
+		enabled: true
+		directoryPath: "./test"
+	watch:
+		enabled: true
 ```
 
 # Features
