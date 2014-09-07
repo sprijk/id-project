@@ -30,7 +30,6 @@ gulp.task("coffee:compile", function(cb) {
     bare: true
   });
   coffeeCompiler.on("error", log.error.bind(log));
-  log.debug("coffee:compile: Looking for `" + sourceDirectoryPath + "/**/*.coffee`.");
   gulp.src("" + sourceDirectoryPath + "/**/*.coffee").pipe(gulpTap(function(file) {
     log.debug("[coffee:compile] Compiling `" + file.path + "`.");
   })).pipe(coffeeCompiler).pipe(gulp.dest(targetDirectoryPath)).on("end", cb);
