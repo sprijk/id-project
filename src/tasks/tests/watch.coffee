@@ -13,7 +13,7 @@ directoryPath = path.resolve options.directoryPath
 watchEnabled  = idProjectOptions.watch.enabled
 
 runTests = ->
-	tests directoryPath, false, "progress", ->
+	tests directoryPath, false, "spec", ->
 
 changeHandler = (options) ->
 	return unless options.path.match /\.coffee/
