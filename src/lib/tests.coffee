@@ -9,7 +9,7 @@ pathToMocha = path.resolve "#{__dirname}/../../node_modules/.bin/mocha"
 tests = (directory, exit, reporter, cb) ->
 	fs.exists directory, (exists) ->
 		unless exists
-			log.info "Skipping mocha: Directory `#{pathToTestsDirectory}` not found."
+			log.info "Skipping mocha: Directory `#{directory}` not found."
 			return cb()
 
 		childProcess = cp.spawn pathToMocha, [
