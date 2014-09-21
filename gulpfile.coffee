@@ -1,11 +1,6 @@
 (require './src')
-	browserify:    false
-	clean:         true
-	coffee:        true
-	copy:          false
-	documentation: false
-	less:          false
-	livereload:    false
-	nodemon:       false
-	tests:         true
-	watch:         true
+	nodemon:
+		enabled: false
+
+	documentation:
+		enabled: false

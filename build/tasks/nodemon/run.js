@@ -1,4 +1,4 @@
-var fs, gulp, gulpNodemon, log, options, path, watchNodemon;
+var enabled, entryFilePath, fs, gulp, gulpNodemon, log, options, path, watchGlob, watchNodemon;
 
 fs = require("fs");
 
@@ -10,21 +10,28 @@ gulpNodemon = require("gulp-nodemon");
 
 log = require("id-debug");
 
-options = idProjectOptions;
+options = idProjectOptions.nodemon;
+
+enabled = options.enabled;
+
+entryFilePath = path.resolve(options.entryFilePath);
+
+watchGlob = options.watchGlob;
 
 watchNodemon = function() {
-  var monitor;
-  return monitor = gulpNodemon({
-    script: "app.js",
-    watch: ["build/server/**/*.js"]
+  return gulpNodemon({
+    script: entryFilePath,
+    watch: watchGlob
   });
 };
 
 gulp.task("nodemon:run", ["compile"], function(cb) {
-  if (options.nodemon !== true) {
+  if (enabled !== true) {
     log.info("Skipping nodemon:run: Disabled.");
     return cb();
   }
+  log.debug("[nodemon:run] Entry file path: `" + entryFilePath + "`.");
+  log.debug("[nodemon:run] Watch Globs: `" + (watchGlob.join(",")) + "`.");
   watchNodemon();
   cb();
 });

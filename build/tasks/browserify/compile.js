@@ -1,10 +1,14 @@
-var Transform, browserify, entryFilePath, fs, gulp, log, options, targetDirectory, vinylSource;
+var Transform, browserify, enabled, entryFilePath, fs, gulp, gulpTap, log, options, path, targetDirectoryPath, targetFilename, vinylSource;
 
 fs = require("fs");
+
+path = require("path");
 
 browserify = require("browserify");
 
 gulp = require("gulp");
+
+gulpTap = require("gulp-tap");
 
 log = require("id-debug");
 
@@ -12,21 +16,28 @@ vinylSource = require("vinyl-source-stream");
 
 Transform = require("stream").Transform;
 
-entryFilePath = "./build/client/js/app/index.js";
+options = idProjectOptions.browserify;
 
-targetDirectory = "./build/client/js/app";
+enabled = options.enabled;
 
-options = idProjectOptions;
+entryFilePath = path.resolve(options.entryFilePath);
+
+targetDirectoryPath = path.resolve(options.targetDirectoryPath);
+
+targetFilename = options.targetFilename;
 
 gulp.task("browserify:compile", ["coffee:compile", "copy:compile"], function(cb) {
-  if (options.browserify !== true) {
-    log.info("Skipping browserify:compile: Disabled.");
+  if (enabled !== true) {
+    log.info("[browserify:compile] Disabled.");
     return cb();
   }
+  log.debug("[browserify:compile] Entry file: `" + entryFilePath + "`.");
+  log.debug("[browserify:compile] Target directory path: `" + targetDirectoryPath + "`.");
+  log.debug("[browserify:compile] Target filename: `" + targetFilename + "`.");
   fs.exists(entryFilePath, function(exists) {
     var bundle, bundler;
     if (!exists) {
-      log.info("Skipping browserify:compile: File `" + entryFilePath + "` not found.");
+      log.info("[browserify:compile] Entry file `" + entryFilePath + "` not found.");
       return cb();
     }
     bundler = browserify({
@@ -39,6 +50,8 @@ gulp.task("browserify:compile", ["coffee:compile", "copy:compile"], function(cb)
       debug: true
     });
     bundle.on("error", log.error.bind(log));
-    bundle.pipe(vinylSource("app.bundle.js")).pipe(gulp.dest(targetDirectory)).on("end", cb);
+    bundle.pipe(vinylSource(targetFilename)).pipe(gulpTap(function(file) {
+      log.debug("[browserify:compile] Compiling `" + file.path + "`.");
+    })).pipe(gulp.dest(targetDirectoryPath)).on("end", cb);
   });
 });

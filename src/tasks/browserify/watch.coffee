@@ -2,24 +2,31 @@ fs   = require "fs"
 path = require "path"
 
 gulp           = require "gulp"
+gulpTap        = require "gulp-tap"
 gulpLivereload = require "gulp-livereload"
 log            = require "id-debug"
 vinylSource    = require "vinyl-source-stream"
 watchify       = require "watchify"
 
-options             = idProjectOptions
-entryFilePath       = options.browserifyEntryFilePath
-targetFilename      = options.browserifyTargetFilename
-targetDirectoryPath = options.browserifyTargetDirectoryPath
+options             = idProjectOptions.browserify
+enabled             = options.enabled
+entryFilePath       = path.resolve options.entryFilePath
+targetDirectoryPath = path.resolve options.targetDirectoryPath
+targetFilename      = options.targetFilename
+watchEnabled        = idProjectOptions.watch.enabled
 
 gulp.task "browserify:watch", [ "browserify:compile", "livereload:run" ], (cb) ->
-	unless options.browserify is true and options.watch is true
+	unless enabled is true and watchEnabled is true
 		log.info "Skipping browserify:watch: Disabled."
 		return cb()
 
+	log.debug "[browserify:watch] Entry file: `#{entryFilePath}`."
+	log.debug "[browserify:watch] Target directory path: `#{targetDirectoryPath}`."
+	log.debug "[browserify:watch] Target filename: `#{targetFilename}`."
+
 	fs.exists entryFilePath, (exists) ->
 		unless exists
-			log.info "Skipping browserify:watch: File `#{entryFilePath}` not found."
+			log.info "[browserify:watch] Entry file `#{entryFilePath}` not found."
 			return cb()
 
 		bundler = watchify
@@ -36,6 +43,11 @@ gulp.task "browserify:watch", [ "browserify:compile", "livereload:run" ], (cb) -
 
 			bundle
 				.pipe vinylSource targetFilename
+
+				.pipe gulpTap (file) ->
+					log.debug "[browserify:watch] Compiling `#{file.path}`."
+					return
+
 				.pipe gulp.dest targetDirectoryPath
 				.pipe gulpLivereload auto: false
 

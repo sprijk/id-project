@@ -1,4 +1,4 @@
-var diskWatcher, fs, gulp, gulpCoffee, gulpLivereload, log, options, path;
+var diskWatcher, enabled, fs, gulp, gulpCoffee, gulpLivereload, log, options, path, sourceDirectoryPath, targetDirectoryPath, watchEnabled;
 
 fs = require("fs");
 
@@ -14,27 +14,37 @@ log = require("id-debug");
 
 diskWatcher = require("../../lib/disk-watcher");
 
-options = idProjectOptions;
+options = idProjectOptions.coffee;
+
+enabled = options.enabled;
+
+sourceDirectoryPath = path.resolve(options.sourceDirectoryPath);
+
+targetDirectoryPath = path.resolve(options.targetDirectoryPath);
+
+watchEnabled = idProjectOptions.watch.enabled;
 
 gulp.task("coffee:watch", ["coffee:compile", "livereload:run"], function(cb) {
   var compilePath, removePath;
-  if (!(options.coffee === true && options.watch === true)) {
+  if (!(enabled === true && watchEnabled === true)) {
     log.info("Skipping browserify:watch: Disabled.");
     return cb();
   }
+  log.debug("[coffee:watch] Source directory path: `" + sourceDirectoryPath + "`.");
+  log.debug("[coffee:watch] Target directory path: `" + targetDirectoryPath + "`.");
   compilePath = function(sourcePath) {
-    var buildDirectory, coffeeCompiler, sourceDirectory;
+    var coffeeCompiler, sourceDirectory, targetDirectory;
     coffeeCompiler = gulpCoffee({
       bare: true
     });
     coffeeCompiler.on("error", log.error.bind(log));
     sourceDirectory = path.dirname(sourcePath);
-    buildDirectory = sourceDirectory.replace("src", "build");
-    return gulp.src(sourcePath).pipe(coffeeCompiler).pipe(gulp.dest(buildDirectory));
+    targetDirectory = sourceDirectory.replace(sourceDirectoryPath, targetDirectoryPath);
+    return gulp.src(sourcePath).pipe(coffeeCompiler).pipe(gulp.dest(targetDirectory));
   };
   removePath = function(sourcePath) {
     var targetPath;
-    targetPath = sourcePath.replace("src", "build").replace(".coffee", ".js");
+    targetPath = sourcePath.replace(sourceDirectoryPath, targetDirectoryPath).replace(".coffee", ".js");
     return fs.unlink(targetPath, function(error) {
       if (error) {
         return log.error(error);
@@ -47,10 +57,13 @@ gulp.task("coffee:watch", ["coffee:compile", "livereload:run"], function(cb) {
     }
     switch (options.type) {
       case "changed":
+        log.debug("[coffee:watch] Compiling `" + options.path + "`.");
         return compilePath(options.path);
       case "added":
+        log.debug("[coffee:watch] Compiling `" + options.path + "`.");
         return compilePath(options.path);
       case "deleted":
+        log.debug("[coffee:watch] Removing `" + options.path + "`.");
         return removePath(options.path);
     }
   });

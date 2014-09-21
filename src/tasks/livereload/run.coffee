@@ -4,10 +4,11 @@ gulp           = require "gulp"
 gulpLivereload = require "gulp-livereload"
 log            = require "id-debug"
 
-options         = idProjectOptions
+options = idProjectOptions.livereload
+enabled = options.enabled
 
 gulp.task "livereload:run", (cb) ->
-	unless options.livereload is true
+	unless enabled is true
 		log.info "Skipping livereload:run: Disabled."
 		return cb()
 

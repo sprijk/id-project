@@ -1,4 +1,4 @@
-var gulp, gulpLivereload, log, net, options;
+var enabled, gulp, gulpLivereload, log, net, options;
 
 net = require("net");
 
@@ -8,11 +8,13 @@ gulpLivereload = require("gulp-livereload");
 
 log = require("id-debug");
 
-options = idProjectOptions;
+options = idProjectOptions.livereload;
+
+enabled = options.enabled;
 
 gulp.task("livereload:run", function(cb) {
   var connection;
-  if (options.livereload !== true) {
+  if (enabled !== true) {
     log.info("Skipping livereload:run: Disabled.");
     return cb();
   }

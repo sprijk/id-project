@@ -1,15 +1,20 @@
 gulp = require "gulp"
 log  = require "id-debug"
+path = require "path"
 
 tests = require "../../lib/tests"
 
-options = idProjectOptions
+options       = idProjectOptions.tests
+enabled       = options.enabled
+directoryPath = path.resolve options.directoryPath
 
 gulp.task "tests:run", [ "compile" ], (cb) ->
-	unless options.tests is true
+	unless enabled is true
 		log.info "Skipping tests:run: Disabled."
 		return cb()
 
-	tests true, "spec", cb
+	log.debug "[tests:run] Directory path: `#{directoryPath}`."
+
+	tests directoryPath, true, "spec", cb
 
 	return

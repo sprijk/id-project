@@ -1,10 +1,12 @@
-var entryFilePath, fs, gulp, gulpLivereload, log, options, path, targetDirectory, vinylSource, watchify;
+var enabled, entryFilePath, fs, gulp, gulpLivereload, gulpTap, log, options, path, targetDirectoryPath, targetFilename, vinylSource, watchEnabled, watchify;
 
 fs = require("fs");
 
 path = require("path");
 
 gulp = require("gulp");
+
+gulpTap = require("gulp-tap");
 
 gulpLivereload = require("gulp-livereload");
 
@@ -14,21 +16,30 @@ vinylSource = require("vinyl-source-stream");
 
 watchify = require("watchify");
 
-entryFilePath = "./build/client/js/app/index.js";
+options = idProjectOptions.browserify;
 
-targetDirectory = "./build/client/js/app";
+enabled = options.enabled;
 
-options = idProjectOptions;
+entryFilePath = path.resolve(options.entryFilePath);
+
+targetDirectoryPath = path.resolve(options.targetDirectoryPath);
+
+targetFilename = options.targetFilename;
+
+watchEnabled = idProjectOptions.watch.enabled;
 
 gulp.task("browserify:watch", ["browserify:compile", "livereload:run"], function(cb) {
-  if (!(options.browserify === true && options.watch === true)) {
+  if (!(enabled === true && watchEnabled === true)) {
     log.info("Skipping browserify:watch: Disabled.");
     return cb();
   }
+  log.debug("[browserify:watch] Entry file: `" + entryFilePath + "`.");
+  log.debug("[browserify:watch] Target directory path: `" + targetDirectoryPath + "`.");
+  log.debug("[browserify:watch] Target filename: `" + targetFilename + "`.");
   fs.exists(entryFilePath, function(exists) {
     var bundler, compile;
     if (!exists) {
-      log.info("Skipping browserify:watch: File `" + entryFilePath + "` not found.");
+      log.info("[browserify:watch] Entry file `" + entryFilePath + "` not found.");
       return cb();
     }
     bundler = watchify({
@@ -43,7 +54,9 @@ gulp.task("browserify:watch", ["browserify:compile", "livereload:run"], function
         debug: true
       });
       bundle.on("error", log.error.bind(log));
-      return bundle.pipe(vinylSource("app.bundle.js")).pipe(gulp.dest(targetDirectory)).pipe(gulpLivereload({
+      return bundle.pipe(vinylSource(targetFilename)).pipe(gulpTap(function(file) {
+        log.debug("[browserify:watch] Compiling `" + file.path + "`.");
+      })).pipe(gulp.dest(targetDirectoryPath)).pipe(gulpLivereload({
         auto: false
       }));
     };

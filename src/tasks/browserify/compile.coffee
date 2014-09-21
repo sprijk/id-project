@@ -1,24 +1,31 @@
-fs = require "fs"
+fs   = require "fs"
+path = require "path"
 
 browserify    = require "browserify"
 gulp          = require "gulp"
+gulpTap       = require "gulp-tap"
 log           = require "id-debug"
 vinylSource   = require "vinyl-source-stream"
 { Transform } = require "stream"
 
-options             = idProjectOptions
-entryFilePath       = options.browserifyEntryFilePath
-targetFilename      = options.browserifyTargetFilename
-targetDirectoryPath = options.browserifyTargetDirectoryPath
+options             = idProjectOptions.browserify
+enabled             = options.enabled
+entryFilePath       = path.resolve options.entryFilePath
+targetDirectoryPath = path.resolve options.targetDirectoryPath
+targetFilename      = options.targetFilename
 
 gulp.task "browserify:compile", [ "coffee:compile", "copy:compile" ], (cb) ->
-	unless options.browserify is true
-		log.info "Skipping browserify:compile: Disabled."
+	unless enabled is true
+		log.info "[browserify:compile] Disabled."
 		return cb()
+
+	log.debug "[browserify:compile] Entry file: `#{entryFilePath}`."
+	log.debug "[browserify:compile] Target directory path: `#{targetDirectoryPath}`."
+	log.debug "[browserify:compile] Target filename: `#{targetFilename}`."
 
 	fs.exists entryFilePath, (exists) ->
 		unless exists
-			log.info "Skipping browserify:compile: File `#{entryFilePath}` not found."
+			log.info "[browserify:compile] Entry file `#{entryFilePath}` not found."
 			return cb()
 
 		bundler = browserify
@@ -34,6 +41,10 @@ gulp.task "browserify:compile", [ "coffee:compile", "copy:compile" ], (cb) ->
 
 		bundle
 			.pipe vinylSource targetFilename
+			.pipe gulpTap (file) ->
+				log.debug "[browserify:compile] Compiling `#{file.path}`."
+				return
+
 			.pipe gulp.dest targetDirectoryPath
 			.on "end", cb
 
