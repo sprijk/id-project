@@ -29,7 +29,8 @@ gulp.task "browserify:compile", [ "coffee:compile", "copy:compile" ], (cb) ->
 			return cb()
 
 		bundler = browserify
-			entries: [ entryFilePath ]
+			paths:      options.paths
+			entries:    [ entryFilePath ]
 			extensions: [ ".js", ".json", ".jade" ]
 
 		bundler.transform "jadeify"

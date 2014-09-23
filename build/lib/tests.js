@@ -14,7 +14,7 @@ tests = function(directory, exit, reporter, cb) {
   return fs.exists(directory, function(exists) {
     var childProcess;
     if (!exists) {
-      log.info("Skipping mocha: Directory `" + pathToTestsDirectory + "` not found.");
+      log.info("Skipping mocha: Directory `" + directory + "` not found.");
       return cb();
     }
     childProcess = cp.spawn(pathToMocha, ["--recursive", "--compilers", "coffee:coffee-script/register", "--reporter", reporter, "test"]);

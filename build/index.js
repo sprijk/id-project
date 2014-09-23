@@ -12,6 +12,7 @@ defaults.targetDirectoryPath = "./build";
 
 defaults.browserify = {
   enabled: true,
+  paths: ["" + defaults.targetDirectoryPath + "/client/js/app"],
   entryFilePath: "" + defaults.targetDirectoryPath + "/client/js/app/app.js",
   targetFilename: "app.bundle.js",
   targetDirectoryPath: "" + defaults.targetDirectoryPath + "/client/js/app"

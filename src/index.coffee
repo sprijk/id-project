@@ -7,49 +7,50 @@ defaults.sourceDirectoryPath = "./src"
 defaults.targetDirectoryPath = "./build"
 
 defaults.browserify =
-	enabled: true
+	enabled:             true
+	paths:               [ "#{defaults.targetDirectoryPath}/client/js/app" ]
 	entryFilePath:       "#{defaults.targetDirectoryPath}/client/js/app/app.js"
 	targetFilename:      "app.bundle.js"
 	targetDirectoryPath: "#{defaults.targetDirectoryPath}/client/js/app"
 
 defaults.clean =
-	enabled: true
+	enabled:             true
 	targetDirectoryPath: defaults.targetDirectoryPath
 
 defaults.coffee =
-	enabled: true
+	enabled:             true
 	sourceDirectoryPath: defaults.sourceDirectoryPath
 	targetDirectoryPath: defaults.targetDirectoryPath
 
 defaults.copy =
-	enabled: true
+	enabled:             true
 	sourceDirectoryPath: defaults.sourceDirectoryPath
 	targetDirectoryPath: defaults.targetDirectoryPath
 
 defaults.documentation =
-	enabled: true
+	enabled:             true
 	sourceDirectoryPath: defaults.sourceDirectoryPath
 	targetDirectoryPath: defaults.targetDirectoryPath
 
 defaults.less =
-	enabled: true
+	enabled:             true
 	entryFilePath:       "#{defaults.sourceDirectoryPath}/client/less/app.less"
 	targetDirectoryPath: "#{defaults.targetDirectoryPath}/client/css"
 
 defaults.livereload =
-	enabled: true
+	enabled:             true
 
 defaults.nodemon =
-	enabled: true
-	entryFilePath: "./app.js"
-	watchGlob:     [ "#{defaults.targetDirectoryPath}/server/**/*.js" ]
+	enabled:             true
+	entryFilePath:       "./app.js"
+	watchGlob:           [ "#{defaults.targetDirectoryPath}/server/**/*.js" ]
 
 defaults.tests =
-	enabled: true
-	directoryPath: "./test"
+	enabled:             true
+	directoryPath:       "./test"
 
 defaults.watch =
-	enabled: true
+	enabled:             true
 
 applyDefaults = (options) ->
 	#log.debug "options before", options

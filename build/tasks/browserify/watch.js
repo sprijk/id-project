@@ -43,6 +43,7 @@ gulp.task("browserify:watch", ["browserify:compile", "livereload:run"], function
       return cb();
     }
     bundler = watchify({
+      paths: options.paths,
       entries: [entryFilePath],
       extensions: [".js", ".json", ".jade"]
     });
