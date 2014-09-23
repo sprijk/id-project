@@ -21,7 +21,7 @@ directoryPath = path.resolve(options.directoryPath);
 watchEnabled = idProjectOptions.watch.enabled;
 
 runTests = function() {
-  return tests(directoryPath, false, "progress", function() {});
+  return tests(directoryPath, false, "spec", function() {});
 };
 
 changeHandler = function(options) {
