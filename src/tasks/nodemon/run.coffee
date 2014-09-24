@@ -15,6 +15,7 @@ watchNodemon = ->
 		#verbose: true
 		script: entryFilePath
 		watch:  watchGlob
+		ignore: [ "**/.git/**/*", "**/node_modules/**/*" ]
 
 gulp.task "nodemon:run", [ "compile" ], (cb) ->
 	unless enabled is true

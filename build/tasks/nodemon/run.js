@@ -21,7 +21,8 @@ watchGlob = options.watchGlob;
 watchNodemon = function() {
   return gulpNodemon({
     script: entryFilePath,
-    watch: watchGlob
+    watch: watchGlob,
+    ignore: ["**/.git/**/*", "**/node_modules/**/*"]
   });
 };
 
