@@ -71,22 +71,26 @@ applyDefaults = function(options) {
   _results = [];
   for (task in defaults) {
     taskOptions = defaults[task];
-    _results.push((function() {
-      var _results1;
-      _results1 = [];
-      for (k in taskOptions) {
-        v = taskOptions[k];
-        if (options[task] == null) {
-          options[task] = {};
+    if (typeof taskOptions === 'object') {
+      _results.push((function() {
+        var _results1;
+        _results1 = [];
+        for (k in taskOptions) {
+          v = taskOptions[k];
+          if (options[task] == null) {
+            options[task] = {};
+          }
+          if (options[task][k] == null) {
+            _results1.push(options[task][k] = v);
+          } else {
+            _results1.push(void 0);
+          }
         }
-        if (options[task][k] == null) {
-          _results1.push(options[task][k] = v);
-        } else {
-          _results1.push(void 0);
-        }
-      }
-      return _results1;
-    })());
+        return _results1;
+      })());
+    } else {
+      _results.push(options[task] = taskOptions);
+    }
   }
   return _results;
 };
