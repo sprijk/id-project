@@ -3,60 +3,58 @@ lsr = require "lsr"
 
 defaults = {}
 
-defaults.sourceDirectoryPath = "./src"
-defaults.targetDirectoryPath = "./build"
+sourceDirectoryPath = "src"
+targetDirectoryPath = "build"
 
 defaults.browserify =
 	enabled:             true
-	paths:               [ "#{defaults.targetDirectoryPath}/client/js/app" ]
-	entryFilePath:       "#{defaults.targetDirectoryPath}/client/js/app/app.js"
+	paths:               [ "#{targetDirectoryPath}/client/js/app" ]
+	entryFilePath:       "#{targetDirectoryPath}/client/js/app/app.js"
 	targetFilename:      "app.bundle.js"
-	targetDirectoryPath: "#{defaults.targetDirectoryPath}/client/js/app"
+	targetDirectoryPath: "#{targetDirectoryPath}/client/js/app"
 
 defaults.clean =
 	enabled:             true
-	targetDirectoryPath: defaults.targetDirectoryPath
+	targetDirectoryPath: targetDirectoryPath
 
 defaults.coffee =
 	enabled:             true
-	sourceDirectoryPath: defaults.sourceDirectoryPath
-	targetDirectoryPath: defaults.targetDirectoryPath
+	sourceDirectoryPath: sourceDirectoryPath
+	targetDirectoryPath: targetDirectoryPath
 
 defaults.copy =
 	enabled:             true
-	sourceDirectoryPath: defaults.sourceDirectoryPath
-	targetDirectoryPath: defaults.targetDirectoryPath
+	sourceDirectoryPath: sourceDirectoryPath
+	targetDirectoryPath: targetDirectoryPath
 
 defaults.documentation =
 	enabled:             true
-	sourceDirectoryPath: defaults.sourceDirectoryPath
-	targetDirectoryPath: defaults.targetDirectoryPath
+	sourceDirectoryPath: sourceDirectoryPath
+	targetDirectoryPath: targetDirectoryPath
 
 defaults.less =
 	enabled:             true
-	entryFilePath:       "#{defaults.sourceDirectoryPath}/client/less/app.less"
-	targetDirectoryPath: "#{defaults.targetDirectoryPath}/client/css"
+	entryFilePath:       "#{sourceDirectoryPath}/client/less/app.less"
+	targetDirectoryPath: "#{targetDirectoryPath}/client/css"
 
 defaults.livereload =
 	enabled:             true
 
 defaults.nodemon =
 	enabled:             true
-	entryFilePath:       "./app.js"
-	watchGlob:           [ "#{defaults.targetDirectoryPath}/server/**/*.js" ]
+	entryFilePath:       "app.js"
+	watchGlob:           [ "#{targetDirectoryPath}/server/**/*.js" ]
 
 defaults.tests =
 	enabled:             true
-	directoryPath:       "./test"
+	directoryPath:       "test"
 
 defaults.watch =
 	enabled:             true
 
 applyDefaults = (options) ->
-	#log.debug "options before", options
-
 	for task, taskOptions of defaults
-		if typeof taskOptions is 'object'
+		if typeof taskOptions is "object"
 			for k, v of taskOptions
 				unless options[task]?
 					options[task] = {}
@@ -65,8 +63,6 @@ applyDefaults = (options) ->
 					options[task][k] = v
 		else
 			options[task] = taskOptions
-
-	#log.debug "options after", options
 
 module.exports = (options = {}) ->
 	tasksDirectoryPath = "#{__dirname}/tasks"
