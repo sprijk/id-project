@@ -56,12 +56,15 @@ applyDefaults = (options) ->
 	#log.debug "options before", options
 
 	for task, taskOptions of defaults
-		for k, v of taskOptions
-			unless options[task]?
-				options[task] = {}
+		if typeof taskOptions is 'object'
+			for k, v of taskOptions
+				unless options[task]?
+					options[task] = {}
 
-			unless options[task][k]?
-				options[task][k] = v
+				unless options[task][k]?
+					options[task][k] = v
+		else
+			options[task] = taskOptions
 
 	#log.debug "options after", options
 
