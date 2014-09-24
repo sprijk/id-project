@@ -31,7 +31,7 @@ policy is to enable all options by default.
 sourceDirectoryPath = "./src"
 targetDirectoryPath = "./build"
 
-require "id-project"
+(require "id-project")
 	browserify:
 		enabled: true
 		entryFilePath:       "#{targetDirectoryPath}/client/js/app/app.js"
