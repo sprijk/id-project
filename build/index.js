@@ -1,4 +1,4 @@
-var applyDefaults, defaults, log, lsr;
+var applyDefaults, defaults, log, lsr, sourceDirectoryPath, targetDirectoryPath;
 
 log = require("id-debug");
 
@@ -6,45 +6,45 @@ lsr = require("lsr");
 
 defaults = {};
 
-defaults.sourceDirectoryPath = "./src";
+sourceDirectoryPath = "src";
 
-defaults.targetDirectoryPath = "./build";
+targetDirectoryPath = "build";
 
 defaults.browserify = {
   enabled: true,
-  paths: ["" + defaults.targetDirectoryPath + "/client/js/app"],
-  entryFilePath: "" + defaults.targetDirectoryPath + "/client/js/app/app.js",
+  paths: ["" + targetDirectoryPath + "/client/js/app"],
+  entryFilePath: "" + targetDirectoryPath + "/client/js/app/app.js",
   targetFilename: "app.bundle.js",
-  targetDirectoryPath: "" + defaults.targetDirectoryPath + "/client/js/app"
+  targetDirectoryPath: "" + targetDirectoryPath + "/client/js/app"
 };
 
 defaults.clean = {
   enabled: true,
-  targetDirectoryPath: defaults.targetDirectoryPath
+  targetDirectoryPath: targetDirectoryPath
 };
 
 defaults.coffee = {
   enabled: true,
-  sourceDirectoryPath: defaults.sourceDirectoryPath,
-  targetDirectoryPath: defaults.targetDirectoryPath
+  sourceDirectoryPath: sourceDirectoryPath,
+  targetDirectoryPath: targetDirectoryPath
 };
 
 defaults.copy = {
   enabled: true,
-  sourceDirectoryPath: defaults.sourceDirectoryPath,
-  targetDirectoryPath: defaults.targetDirectoryPath
+  sourceDirectoryPath: sourceDirectoryPath,
+  targetDirectoryPath: targetDirectoryPath
 };
 
 defaults.documentation = {
   enabled: true,
-  sourceDirectoryPath: defaults.sourceDirectoryPath,
-  targetDirectoryPath: defaults.targetDirectoryPath
+  sourceDirectoryPath: sourceDirectoryPath,
+  targetDirectoryPath: targetDirectoryPath
 };
 
 defaults.less = {
   enabled: true,
-  entryFilePath: "" + defaults.sourceDirectoryPath + "/client/less/app.less",
-  targetDirectoryPath: "" + defaults.targetDirectoryPath + "/client/css"
+  entryFilePath: "" + sourceDirectoryPath + "/client/less/app.less",
+  targetDirectoryPath: "" + targetDirectoryPath + "/client/css"
 };
 
 defaults.livereload = {
@@ -53,13 +53,13 @@ defaults.livereload = {
 
 defaults.nodemon = {
   enabled: true,
-  entryFilePath: "./app.js",
-  watchGlob: ["" + defaults.targetDirectoryPath + "/server/**/*.js"]
+  entryFilePath: "app.js",
+  watchGlob: ["" + targetDirectoryPath + "/server/**/*.js"]
 };
 
 defaults.tests = {
   enabled: true,
-  directoryPath: "./test"
+  directoryPath: "test"
 };
 
 defaults.watch = {
@@ -71,7 +71,7 @@ applyDefaults = function(options) {
   _results = [];
   for (task in defaults) {
     taskOptions = defaults[task];
-    if (typeof taskOptions === 'object') {
+    if (typeof taskOptions === "object") {
       _results.push((function() {
         var _results1;
         _results1 = [];
