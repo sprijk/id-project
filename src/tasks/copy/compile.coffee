@@ -6,6 +6,7 @@ log     = require "id-debug"
 
 options             = idProjectOptions.copy
 enabled             = options.enabled
+excluded            = options.excluded
 sourceDirectoryPath = path.resolve options.sourceDirectoryPath
 targetDirectoryPath = path.resolve options.targetDirectoryPath
 
@@ -17,7 +18,9 @@ gulp.task "copy:compile", (cb) ->
 	log.debug "[copy:compile] Source directory path: `#{sourceDirectoryPath}`."
 	log.debug "[copy:compile] Target directory path: `#{targetDirectoryPath}`."
 
-	gulp.src [ "#{sourceDirectoryPath}/**/*", "!**/*.coffee", "!**/*.less" ]
+	sourceGlob = [ "#{sourceDirectoryPath}/**/*" ].concat excluded
+
+	gulp.src sourceGlob
 		.pipe gulpTap (file) ->
 			log.debug "[copy:compile] Copying `#{file.path}`."
 			return

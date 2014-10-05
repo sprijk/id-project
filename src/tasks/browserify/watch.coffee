@@ -32,8 +32,9 @@ gulp.task "browserify:watch", [ "browserify:compile", "livereload:run" ], (cb) -
 		bundler = watchify
 			paths:      options.paths
 			entries:    [ entryFilePath ]
-			extensions: [ ".js", ".json", ".jade" ]
+			extensions: [ ".coffee", ".js", ".json", ".jade" ]
 
+		bundler.transform "cjsxify"
 		bundler.transform "jadeify"
 		bundler.transform "debowerify"
 
@@ -46,7 +47,7 @@ gulp.task "browserify:watch", [ "browserify:compile", "livereload:run" ], (cb) -
 				.pipe vinylSource targetFilename
 
 				.pipe gulpTap (file) ->
-					log.debug "[browserify:watch] Compiling `#{file.path}`."
+					log.debug "[browserify:watch] Compiled `#{file.path}`."
 					return
 
 				.pipe gulp.dest targetDirectoryPath

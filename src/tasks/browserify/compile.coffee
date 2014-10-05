@@ -31,8 +31,9 @@ gulp.task "browserify:compile", [ "coffee:compile", "copy:compile" ], (cb) ->
 		bundler = browserify
 			paths:      options.paths
 			entries:    [ entryFilePath ]
-			extensions: [ ".js", ".json", ".jade" ]
+			extensions: [ ".coffee", ".js", ".json", ".jade" ]
 
+		bundler.transform "cjsxify"
 		bundler.transform "jadeify"
 		bundler.transform "debowerify"
 
@@ -43,7 +44,7 @@ gulp.task "browserify:compile", [ "coffee:compile", "copy:compile" ], (cb) ->
 		bundle
 			.pipe vinylSource targetFilename
 			.pipe gulpTap (file) ->
-				log.debug "[browserify:compile] Compiling `#{file.path}`."
+				log.debug "[browserify:compile] Compiled `#{file.path}`."
 				return
 
 			.pipe gulp.dest targetDirectoryPath

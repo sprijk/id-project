@@ -5,12 +5,14 @@ gulp           = require "gulp"
 gulpLivereload = require "gulp-livereload"
 gulpTap        = require "gulp-tap"
 log            = require "id-debug"
+minimatch      = require "minimatch"
 
 diskWatcher  = require "../../lib/disk-watcher"
 { copy, rm } = require "../../lib/files"
 
 options             = idProjectOptions.copy
 enabled             = options.enabled
+excluded            = options.excluded
 sourceDirectoryPath = path.resolve options.sourceDirectoryPath
 targetDirectoryPath = path.resolve options.targetDirectoryPath
 watchEnabled        = idProjectOptions.watch.enabled
@@ -31,7 +33,15 @@ gulp.task "copy:watch", [ "copy:compile", "livereload:run" ], (cb) ->
 	log.debug "[copy:watch] Target directory path: `#{targetDirectoryPath}`."
 
 	diskWatcher.src().on "change", (options) ->
-		return if options.path.match /\.(coffee|less)/
+		log.warning "Detected change", options
+
+		for exclude in excludes
+			log.warning "trying exclude", exclude
+
+			if minimatch options.path, exclude
+				log.warning "exclude matched!", options.path, exclude
+
+				return
 
 		switch options.type
 			when "changed"

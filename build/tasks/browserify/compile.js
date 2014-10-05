@@ -43,8 +43,9 @@ gulp.task("browserify:compile", ["coffee:compile", "copy:compile"], function(cb)
     bundler = browserify({
       paths: options.paths,
       entries: [entryFilePath],
-      extensions: [".js", ".json", ".jade"]
+      extensions: [".coffee", ".js", ".json", ".jade"]
     });
+    bundler.transform("cjsxify");
     bundler.transform("jadeify");
     bundler.transform("debowerify");
     bundle = bundler.bundle({
@@ -52,7 +53,7 @@ gulp.task("browserify:compile", ["coffee:compile", "copy:compile"], function(cb)
     });
     bundle.on("error", log.error.bind(log));
     bundle.pipe(vinylSource(targetFilename)).pipe(gulpTap(function(file) {
-      log.debug("[browserify:compile] Compiling `" + file.path + "`.");
+      log.debug("[browserify:compile] Compiled `" + file.path + "`.");
     })).pipe(gulp.dest(targetDirectoryPath)).on("end", cb);
   });
 });
