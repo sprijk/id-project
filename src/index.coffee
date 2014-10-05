@@ -5,6 +5,7 @@ defaults = {}
 
 sourceDirectoryPath = "src"
 targetDirectoryPath = "build"
+testDirectoryPath   = "test"
 
 defaults.browserify =
 	enabled:             true
@@ -52,6 +53,8 @@ defaults.tests =
 
 defaults.watch =
 	enabled:             true
+	sourceDirectoryPath: sourceDirectoryPath
+	testDirectoryPath:   testDirectoryPath
 
 applyDefaults = (options) ->
 	for task, taskOptions of defaults

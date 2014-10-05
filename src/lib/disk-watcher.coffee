@@ -3,11 +3,15 @@ gulp = require "gulp"
 srcWatch  = null
 testWatch = null
 
+options             = idProjectOptions.watch
+sourceDirectoryPath = path.resolve options.sourceDirectoryPath
+testDirectoryPath   = path.resolve options.testDirectoryPath
+
 module.exports =
 	src: ->
-		srcWatch or= gulp.watch "src/**/*",  read: false
+		srcWatch or= gulp.watch "#{sourceDirectoryPath}/**/*",  read: false
 		srcWatch
 
 	test: ->
-		testWatch or= gulp.watch "test/**/*", read: false
+		testWatch or= gulp.watch "#{testDirectoryPath}/**/*", read: false
 		testWatch
