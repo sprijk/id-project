@@ -1,4 +1,4 @@
-var enabled, gulp, gulpTap, log, options, path, sourceDirectoryPath, targetDirectoryPath;
+var enabled, excluded, gulp, gulpTap, log, options, path, sourceDirectoryPath, targetDirectoryPath;
 
 path = require("path");
 
@@ -12,18 +12,22 @@ options = idProjectOptions.copy;
 
 enabled = options.enabled;
 
+excluded = options.excluded;
+
 sourceDirectoryPath = path.resolve(options.sourceDirectoryPath);
 
 targetDirectoryPath = path.resolve(options.targetDirectoryPath);
 
 gulp.task("copy:compile", function(cb) {
+  var sourceGlob;
   if (enabled !== true) {
     log.info("Skipping copy:compile: Disabled.");
     return cb();
   }
   log.debug("[copy:compile] Source directory path: `" + sourceDirectoryPath + "`.");
   log.debug("[copy:compile] Target directory path: `" + targetDirectoryPath + "`.");
-  gulp.src(["" + sourceDirectoryPath + "/**/*", "!**/*.coffee", "!**/*.less"]).pipe(gulpTap(function(file) {
+  sourceGlob = ["" + sourceDirectoryPath + "/**/*"].concat(excluded);
+  gulp.src(sourceGlob).pipe(gulpTap(function(file) {
     log.debug("[copy:compile] Copying `" + file.path + "`.");
   })).pipe(gulp.dest(targetDirectoryPath)).on("end", cb);
 });

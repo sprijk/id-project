@@ -45,8 +45,9 @@ gulp.task("browserify:watch", ["browserify:compile", "livereload:run"], function
     bundler = watchify({
       paths: options.paths,
       entries: [entryFilePath],
-      extensions: [".js", ".json", ".jade"]
+      extensions: [".coffee", ".js", ".json", ".jade"]
     });
+    bundler.transform("cjsxify");
     bundler.transform("jadeify");
     bundler.transform("debowerify");
     compile = function() {
@@ -56,7 +57,7 @@ gulp.task("browserify:watch", ["browserify:compile", "livereload:run"], function
       });
       bundle.on("error", log.error.bind(log));
       return bundle.pipe(vinylSource(targetFilename)).pipe(gulpTap(function(file) {
-        log.debug("[browserify:watch] Compiling `" + file.path + "`.");
+        log.debug("[browserify:watch] Compiled `" + file.path + "`.");
       })).pipe(gulp.dest(targetDirectoryPath)).pipe(gulpLivereload({
         auto: false
       }));

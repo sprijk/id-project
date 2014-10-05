@@ -28,8 +28,8 @@ policy is to enable all options by default.
 ### Default options
 
 ```coffee
-sourceDirectoryPath = "./src"
-targetDirectoryPath = "./build"
+sourceDirectoryPath = "src"
+targetDirectoryPath = "build"
 
 (require "id-project")
 	browserify:
@@ -67,12 +67,12 @@ targetDirectoryPath = "./build"
 		
 	nodemon:
 		enabled: true
-		entryFilePath: "./app.js"
+		entryFilePath: "app.js"
 		watchGlob:     [ "#{targetDirectoryPath}/server/**/*.js" ]
 		
 	tests:
 		enabled: true
-		directoryPath: "./test"
+		directoryPath: "test"
 		
 	watch:
 		enabled: true

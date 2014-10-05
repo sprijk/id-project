@@ -1,4 +1,4 @@
-var copy, diskWatcher, enabled, fs, gulp, gulpLivereload, gulpTap, log, options, path, reloadPath, rm, sourceDirectoryPath, targetDirectoryPath, watchEnabled, _ref;
+var copy, diskWatcher, enabled, excluded, fs, gulp, gulpLivereload, gulpTap, log, minimatch, options, path, reloadPath, rm, sourceDirectoryPath, targetDirectoryPath, watchEnabled, _ref;
 
 fs = require("fs");
 
@@ -12,6 +12,8 @@ gulpTap = require("gulp-tap");
 
 log = require("id-debug");
 
+minimatch = require("minimatch");
+
 diskWatcher = require("../../lib/disk-watcher");
 
 _ref = require("../../lib/files"), copy = _ref.copy, rm = _ref.rm;
@@ -19,6 +21,8 @@ _ref = require("../../lib/files"), copy = _ref.copy, rm = _ref.rm;
 options = idProjectOptions.copy;
 
 enabled = options.enabled;
+
+excluded = options.excluded;
 
 sourceDirectoryPath = path.resolve(options.sourceDirectoryPath);
 
@@ -45,8 +49,15 @@ gulp.task("copy:watch", ["copy:compile", "livereload:run"], function(cb) {
   log.debug("[copy:watch] Source directory path: `" + sourceDirectoryPath + "`.");
   log.debug("[copy:watch] Target directory path: `" + targetDirectoryPath + "`.");
   diskWatcher.src().on("change", function(options) {
-    if (options.path.match(/\.(coffee|less)/)) {
-      return;
+    var exclude, _i, _len;
+    log.warning("Detected change", options);
+    for (_i = 0, _len = excludes.length; _i < _len; _i++) {
+      exclude = excludes[_i];
+      log.warning("trying exclude", exclude);
+      if (minimatch(options.path, exclude)) {
+        log.warning("exclude matched!", options.path, exclude);
+        return;
+      }
     }
     switch (options.type) {
       case "changed":
