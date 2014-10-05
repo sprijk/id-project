@@ -1,4 +1,4 @@
-var applyDefaults, defaults, log, lsr, sourceDirectoryPath, targetDirectoryPath;
+var applyDefaults, defaults, log, lsr, sourceDirectoryPath, targetDirectoryPath, testDirectoryPath;
 
 log = require("id-debug");
 
@@ -9,6 +9,8 @@ defaults = {};
 sourceDirectoryPath = "src";
 
 targetDirectoryPath = "build";
+
+testDirectoryPath = "test";
 
 defaults.browserify = {
   enabled: true,
@@ -64,7 +66,9 @@ defaults.tests = {
 };
 
 defaults.watch = {
-  enabled: true
+  enabled: true,
+  sourceDirectoryPath: sourceDirectoryPath,
+  testDirectoryPath: testDirectoryPath
 };
 
 applyDefaults = function(options) {
