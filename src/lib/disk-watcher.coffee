@@ -1,3 +1,5 @@
+path = require "path"
+
 gulp = require "gulp"
 
 srcWatch  = null
