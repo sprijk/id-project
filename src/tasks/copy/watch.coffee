@@ -33,14 +33,8 @@ gulp.task "copy:watch", [ "copy:compile", "livereload:run" ], (cb) ->
 	log.debug "[copy:watch] Target directory path: `#{targetDirectoryPath}`."
 
 	diskWatcher.src().on "change", (options) ->
-		log.warning "Detected change", options
-
-		for exclude in excludes
-			log.warning "trying exclude", exclude
-
+		for exclude in excluded
 			if minimatch options.path, exclude
-				log.warning "exclude matched!", options.path, exclude
-
 				return
 
 		switch options.type
