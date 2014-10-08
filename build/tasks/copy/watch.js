@@ -50,12 +50,9 @@ gulp.task("copy:watch", ["copy:compile", "livereload:run"], function(cb) {
   log.debug("[copy:watch] Target directory path: `" + targetDirectoryPath + "`.");
   diskWatcher.src().on("change", function(options) {
     var exclude, _i, _len;
-    log.warning("Detected change", options);
-    for (_i = 0, _len = excludes.length; _i < _len; _i++) {
-      exclude = excludes[_i];
-      log.warning("trying exclude", exclude);
+    for (_i = 0, _len = excluded.length; _i < _len; _i++) {
+      exclude = excluded[_i];
       if (minimatch(options.path, exclude)) {
-        log.warning("exclude matched!", options.path, exclude);
         return;
       }
     }
