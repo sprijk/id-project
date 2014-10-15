@@ -15,15 +15,15 @@ policy is to enable all options by default.
 
 1. Put a file named `gulpfile.coffee` in your project directory containing:
 
-   ```coffee
-   require "id-project"
-   ```
+	```coffee
+	require "id-project"
+	```
 
 2. Run the gulpfile from the commandline:
 
-   ```bash
-   $ gulp
-   ```
+	```bash
+	$ gulp
+	```
 
 ### Default options
 
@@ -33,49 +33,52 @@ targetDirectoryPath = "build"
 
 (require "id-project")
 	browserify:
-		enabled: true
+		enabled:             true
 		entryFilePath:       "#{targetDirectoryPath}/client/js/app/app.js"
 		targetFilename:      "app.bundle.js"
 		targetDirectoryPath: "#{targetDirectoryPath}/client/js/app"
-		
+
 	clean:
-		enabled: true
+		enabled:             true
 		targetDirectoryPath: targetDirectoryPath
-		
+
 	coffee:
-		enabled: true
+		enabled:             true
 		sourceDirectoryPath: sourceDirectoryPath
 		targetDirectoryPath: targetDirectoryPath
-		
+
 	copy:
-		enabled: true
+		enabled:             true
+		excluded:            [ "!**/*.coffee", "!**/*.less" ]
 		sourceDirectoryPath: sourceDirectoryPath
 		targetDirectoryPath: targetDirectoryPath
-		
+
 	documentation:
-		enabled: true
+		enabled:             true
 		sourceDirectoryPath: sourceDirectoryPath
 		targetDirectoryPath: targetDirectoryPath
-		
+
 	less:
-		enabled: true
+		enabled:             true
 		entryFilePath:       "#{sourceDirectoryPath}/client/less/app.less"
 		targetDirectoryPath: "#{targetDirectoryPath}/client/css"
-		
+
 	livereload:
-		enabled: true
-		
+		enabled:             true
+
 	nodemon:
-		enabled: true
-		entryFilePath: "app.js"
-		watchGlob:     [ "#{targetDirectoryPath}/server/**/*.js" ]
-		
+		enabled:             true
+		entryFilePath:       "app.js"
+		watchGlob:           [ "#{targetDirectoryPath}/server/**/*.js" ]
+
 	tests:
-		enabled: true
-		directoryPath: "test"
-		
+		enabled:             true
+		directoryPath:       "test"
+
 	watch:
-		enabled: true
+		enabled:             true
+		sourceDirectoryPath: sourceDirectoryPath
+		testDirectoryPath:   testDirectoryPath
 ```
 
 # Features
