@@ -22,7 +22,8 @@ watchNodemon = function() {
   return gulpNodemon({
     script: entryFilePath,
     watch: watchGlob,
-    ignore: ["**/.git/**/*", "**/node_modules/**/*"]
+    ext: "html js coffee",
+    ignore: [".git/**/*", "node_modules/**/*"]
   });
 };
 
