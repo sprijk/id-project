@@ -1,6 +1,6 @@
 {
   "name": "id-project",
-  "version": "2.9.2",
+  "version": "2.10.0",
   "description": "JavaScript project structure on which we're basing other projects.",
   "repository": {
     "type": "git",
