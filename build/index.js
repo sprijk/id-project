@@ -60,6 +60,12 @@ defaults.nodemon = {
   watchGlob: ["" + targetDirectoryPath + "/server/**/*.js"]
 };
 
+defaults.forever = {
+  enabled: true,
+  entryFilePath: "app.js",
+  watchDirectoryPath: sourceDirectoryPath
+};
+
 defaults.tests = {
   enabled: true,
   directoryPath: "test"

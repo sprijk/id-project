@@ -5,6 +5,7 @@ gulp.task "watch", [
 	"coffee:watch"
 	"browserify:watch"
 	"nodemon:run"
+	"forever:run"
 	"less:watch"
 	"tests:watch"
 ]
