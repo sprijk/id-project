@@ -25,7 +25,7 @@ defaults.coffee =
 
 defaults.copy =
 	enabled:             true
-	excluded:            [ "!**/*.coffee", "!**/*.less" ]
+	excluded:            [ "**/*.coffee", "**/*.less" ]
 	sourceDirectoryPath: sourceDirectoryPath
 	targetDirectoryPath: targetDirectoryPath
 

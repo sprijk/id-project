@@ -41,7 +41,7 @@ gulp.task "copy:watch", [ "copy:compile", "livereload:run" ], (cb) ->
 			when "changed"
 				log.debug "[copy:watch] Copying: `#{options.path}`."
 
-				copy options.path, (error) ->
+				copy options.path, targetDirectoryPath, (error) ->
 					log.error error if error
 
 					reloadPath options.path
@@ -49,7 +49,7 @@ gulp.task "copy:watch", [ "copy:compile", "livereload:run" ], (cb) ->
 			when "added"
 				log.debug "[copy:watch] Copying: `#{options.path}`."
 
-				copy options.path, (error) ->
+				copy options.path, targetDirectoryPath, (error) ->
 					log.error error if error
 
 					reloadPath options.path
@@ -57,7 +57,7 @@ gulp.task "copy:watch", [ "copy:compile", "livereload:run" ], (cb) ->
 			when "deleted"
 				log.debug "[copy:watch] Removing: `#{options.path}`."
 
-				rm options.path, (error) ->
+				rm options.path, targetDirectoryPath, (error) ->
 					log.error error if error
 
 	return

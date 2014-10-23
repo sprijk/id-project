@@ -18,6 +18,9 @@ gulp.task "copy:compile", (cb) ->
 	log.debug "[copy:compile] Source directory path: `#{sourceDirectoryPath}`."
 	log.debug "[copy:compile] Target directory path: `#{targetDirectoryPath}`."
 
+	# Negate the excluded patterns.
+	excluded = excluded.map (x) -> "!#{x}"
+
 	sourceGlob = [ "#{sourceDirectoryPath}/**/*" ].concat excluded
 
 	gulp.src sourceGlob
