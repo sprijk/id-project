@@ -59,7 +59,7 @@ gulp.task("copy:watch", ["copy:compile", "livereload:run"], function(cb) {
     switch (options.type) {
       case "changed":
         log.debug("[copy:watch] Copying: `" + options.path + "`.");
-        return copy(options.path, function(error) {
+        return copy(options.path, sourceDirectoryPath, targetDirectoryPath, function(error) {
           if (error) {
             log.error(error);
           }
@@ -67,7 +67,7 @@ gulp.task("copy:watch", ["copy:compile", "livereload:run"], function(cb) {
         });
       case "added":
         log.debug("[copy:watch] Copying: `" + options.path + "`.");
-        return copy(options.path, function(error) {
+        return copy(options.path, sourceDirectoryPath, targetDirectoryPath, function(error) {
           if (error) {
             log.error(error);
           }
@@ -75,7 +75,7 @@ gulp.task("copy:watch", ["copy:compile", "livereload:run"], function(cb) {
         });
       case "deleted":
         log.debug("[copy:watch] Removing: `" + options.path + "`.");
-        return rm(options.path, function(error) {
+        return rm(options.path, targetDirectoryPath, function(error) {
           if (error) {
             return log.error(error);
           }

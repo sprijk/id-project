@@ -4,9 +4,9 @@ fs = require("fs");
 
 rimraf = require("rimraf");
 
-copy = function(path, cb) {
-  var readStream, targetPath, writeStream;
-  targetPath = path.replace("src", "build");
+copy = function(path, sourcePath, targetPath, cb) {
+  var readStream, writeStream;
+  targetPath = path.replace(sourcePath, targetPath);
   readStream = fs.createReadStream(path);
   writeStream = fs.createWriteStream(targetPath);
   readStream.on("error", cb);
@@ -15,7 +15,10 @@ copy = function(path, cb) {
   return readStream.pipe(writeStream);
 };
 
-rm = rimraf;
+rm = function(path, sourcePath, targetPath, cb) {
+  targetPath = path.replace(sourcePath, targetPath);
+  return rimraf(targetPath, cb);
+};
 
 module.exports = {
   rm: rm,
