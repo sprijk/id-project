@@ -2,8 +2,8 @@ fs = require "fs"
 
 rimraf = require "rimraf"
 
-copy = (path, cb) ->
-	targetPath = path.replace "src", "build"
+copy = (path, sourcePath, targetPath, cb) ->
+	targetPath = path.replace sourcePath, targetPath
 
 	readStream  = fs.createReadStream path
 	writeStream = fs.createWriteStream targetPath
@@ -15,7 +15,10 @@ copy = (path, cb) ->
 	readStream
 		.pipe writeStream
 
-rm = rimraf
+rm = (path, sourcePath, targetPath, cb) ->
+	targetPath = path.replace sourcePath, targetPath
+	
+	rimraf targetPath, cb
 
 module.exports =
 	rm:   rm
