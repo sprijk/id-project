@@ -36,7 +36,7 @@ gulp.task "less:watch", [ "less:compile", "livereload:run" ], (cb) ->
 		diskWatcher.src().on "change", (options) ->
 			return unless options.path.match /\.less/
 
-			log.debug "[less:watch] Compiling `#{file.path}`."
+			log.debug "[less:watch] Compiling `#{entryFilePath}`."
 
 			# Compile in all cases (changed, added, deleted).
 			compile()
